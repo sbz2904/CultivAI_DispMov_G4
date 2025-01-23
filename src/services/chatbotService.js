@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Inicializa la API con tu clave
-const genAI = new GoogleGenerativeAI("AIzaSyCkXZNDIA_AF9Ruk3aM2SCz4qMIgT5-3mQ");
+const genAI = new GoogleGenerativeAI("");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export const askChatbot = async (message, weatherData) => {
