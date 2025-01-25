@@ -4,7 +4,7 @@ export const getLocation = async () => {
   try {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-      throw new Error('Permission to access location was denied');
+      throw new Error('Se denegó el permiso para acceder a la ubicación');
     }
 
     const location = await Location.getCurrentPositionAsync({});
