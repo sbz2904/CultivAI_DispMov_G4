@@ -1,2 +1,1 @@
-"# CultivAI_DispMov_G4" 
-"# CultivAI_DispMov_G4_V1" 
+"Rama para el prototipo con Figma" 
