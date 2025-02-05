@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "LocationApp",
-    "slug": "LocationApp",
+    "name": "CultivAI",
+    "slug": "CultivAI",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -19,10 +19,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [],
+      "useCleartextTraffic": true
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+    ]
   }
 }
