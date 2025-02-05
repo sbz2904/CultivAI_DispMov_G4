@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { createUser } from "../services/userService";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import  axios  from "axios";
+import api from "../services/api"; // Se usa api.js para centralizar las peticiones
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -17,24 +16,6 @@ const RegisterScreen = () => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
 
-  const Register = () => {
-    if (!nombre || !email || !password || !confirmPassword) {
-      Alert.alert("Error", "Todos los campos son obligatorios");
-      return;
-    }
-    if (password !== confirmPassword) {
-      Alert.alert("Error", "Las contraseñas no coinciden");
-      return;
-    }
-    const user = { nombre, email, password };
-    axios.post("http://192.168.100.2:5000/api/users/", user).then(response => {           
-      Alert.alert("Éxito", `Cuenta creada`);        
-      navigation.navigate("Login");       
-    }).catch(error => {          
-      Alert.alert("Error", "No se pudo crear la cuenta");      
-    })
-  }
-
   const handleRegister = async () => {
     if (!nombre || !email || !password || !confirmPassword) {
       Alert.alert("Error", "Todos los campos son obligatorios");
@@ -44,12 +25,18 @@ const RegisterScreen = () => {
       Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
+
     try {
-      const userId = await createUser({ nombre, email, password });
-      Alert.alert("Éxito", `Cuenta creada con ID: ${userId}`);
-      navigation.navigate("Login");
+      const response = await api.post("/users", { nombre, email, password });
+
+      if (response.data && response.data.id) {
+        Alert.alert("Éxito", "Cuenta creada con éxito");
+        navigation.navigate("Login"); // Redirigir a Login
+      } else {
+        throw new Error("No se pudo registrar el usuario");
+      }
     } catch (error) {
-      Alert.alert("Error", error.message || "No se pudo crear la cuenta");
+      Alert.alert("Error", error.response?.data?.error || "No se pudo crear la cuenta");
     }
   };
 
@@ -115,7 +102,7 @@ const RegisterScreen = () => {
 
       {/* Botón de Registro */}
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Sign Up</Text>
+        <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
     </View>
   );

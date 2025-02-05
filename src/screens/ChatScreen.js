@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity } from "react-native";
-import { askChatbot } from "../services/chatbotService";
+import api from "../services/api"; // ✅ Se usa api.js para conectar con el backend
 import { getWeather } from "../services/weatherService";
 import { getLocation } from "../services/locationService";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -37,11 +37,14 @@ const ChatScreen = () => {
       const { latitude, longitude } = await getLocation();
       const weatherData = await getWeather(latitude, longitude);
 
-      // Enviar el mensaje al chatbot
-      const botResponse = await askChatbot(userInput, weatherData);
+      // Enviar el mensaje al chatbot usando api.js
+      const response = await api.post("/chatbot", {
+        message: userInput,
+        weather_data: weatherData,
+      });
 
       // Actualizar el chat con el mensaje del usuario y la respuesta del bot
-      setChatLog([...chatLog, { user: userInput, bot: botResponse }]);
+      setChatLog([...chatLog, { user: userInput, bot: response.data.response }]);
       setUserInput(""); // Limpia la entrada del usuario
     } catch (error) {
       setErrorMsg("Hubo un problema al procesar tu mensaje.");

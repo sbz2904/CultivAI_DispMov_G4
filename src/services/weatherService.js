@@ -1,33 +1,27 @@
-import axios from 'axios';
+import api from "./api";
 
-const API_KEY = '1e53941ecd82227342e548ec70553384';
+export const getWeather = async (latitude, longitude) => {
+  try {
+    const response = await api.get(`/weather?latitude=${latitude}&longitude=${longitude}`);
+    return response.data;
+  } catch (error) {
+    throw new Error("Error al obtener el clima");
+  }
+};
 
-const weatherTranslations = {
+export const translateWeatherDescription = (description) => {
+  const translations = {
     "clear sky": "Cielo despejado",
     "few clouds": "Pocas nubes",
     "scattered clouds": "Nubes dispersas",
-    "broken clouds": "Nubes rotas",
-    "shower rain": "Chubascos",
+    "broken clouds": "Nubes fragmentadas",
+    "shower rain": "Lluvia ligera",
     "rain": "Lluvia",
-    "thunderstorm": "Tormenta eléctrica",
+    "thunderstorm": "Tormenta",
     "snow": "Nieve",
-    "mist": "Niebla",
+    "mist": "Neblina",
     "light rain": "Lluvia ligera",
-    "overcast clouds": "Nublado"
-  };
-  
-  export const translateWeatherDescription = (description) => {
-    return weatherTranslations[description] || description;
   };
 
-export const getWeather = async (latitude, longitude) => {
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`;
-
-  try {
-    const response = await axios.get(url);
-    return response.data;
-  } catch (error) {
-    console.error("Error al obtener clima:", error);
-    throw error;
-  }
+  return translations[description] || description;
 };
