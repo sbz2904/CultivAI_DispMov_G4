@@ -88,7 +88,7 @@ const LoginScreen = () => {
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
-          placeholderTextColor="gray"
+          placeholderTextColor="#aaa"
         />
       </View>
 
@@ -124,18 +124,18 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAFFFA",
+    backgroundColor: "#f8f8f8",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
   },
   logoText: {
     fontFamily: "Lobster-Regular",
-    fontSize: 44,
-    textAlign: "center",
+    fontSize: 50,
+    textAlign: "10",
   },
   cultiv: {
-    color: "#201010",
+    color: "#333",
   },
   ai: {
     color: "#2bf532",
@@ -144,19 +144,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: "bold",
-    color: "#171515",
-    marginBottom: 30,
+    color: "#333",
+    marginBottom: 40,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F0EDED",
-    borderRadius: 50,
+    backgroundColor: "#fff",
+    borderRadius: 10,
     padding: 15,
     width: "85%",
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
   icon: {
     marginRight: 10,
@@ -164,7 +166,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     color: "#333",
-    fontSize: 20,
+    fontSize: 16,
   },
   button: {
     backgroundColor: "#28EF78",
@@ -182,6 +184,7 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: 16,
     color: "#000",
+    marginRight: 5,
   },
   link: {
     color: "#11EC35",
