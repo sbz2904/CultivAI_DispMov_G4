@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Image, Button, TouchableOpacity, ScrollView } from 'react-native';
+import React, { useEffect, useState, useCallback } from 'react';
+import { StyleSheet, View, Text, Image, Button, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getLocation } from '../services/locationService';
 import { getWeather, translateWeatherDescription } from '../services/weatherService';
 import { getUserById } from '../services/userService';
 import { getSembríoById } from '../services/sembriosService';
+import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
+import bgImage from '../../assets/back.jpeg';
+import SettingsButton from '../components/SettingsButton';
 
-const HomeScreen = ({ route, navigation }) => {
-  const { userId } = route.params; // ID del usuario pasado como parámetro
+const HomeScreen = ({ route }) => {
+  const navigation = useNavigation();
+  const { userId } = route.params;
+
   const [location, setLocation] = useState(null);
   const [weather, setWeather] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [userData, setUserData] = useState(null);
   const [userSembríos, setUserSembríos] = useState([]);
+
+  // Ocultar la barra de navegación
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
   const fetchLocationAndWeather = async () => {
     try {
@@ -49,6 +60,12 @@ const HomeScreen = ({ route, navigation }) => {
     fetchUserData();
   }, [userId]);
 
+  useFocusEffect(
+    useCallback(() => {
+      fetchUserData();
+    }, [])
+  );
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>CultivAI</Text>
@@ -60,7 +77,7 @@ const HomeScreen = ({ route, navigation }) => {
           {/* Datos del clima */}
           {weather && (
             <View style={styles.weatherContainer}>
-              <Text style={styles.text}>Nombre de usuario: {userData.nombre}</Text>
+              <Text style={styles.text}>Nombre de usuario: {userData?.nombre}</Text>
               <Text style={styles.text}>Ubicación: {weather?.name}, {weather?.sys.country}</Text>
               <Text style={styles.text}>Temperatura: {weather?.main.temp} °C</Text>
               <Text style={styles.text}>Sensación Térmica: {weather?.main.feels_like} °C</Text>
@@ -75,7 +92,6 @@ const HomeScreen = ({ route, navigation }) => {
           {/* Datos del usuario */}
           {userData && (
             <View style={styles.userInfo}>
-              
               <Text style={styles.subtitle}>Mis Sembríos:</Text>
               {userSembríos.length > 0 ? (
                 userSembríos.map((sembrío, index) => (
@@ -106,72 +122,184 @@ const HomeScreen = ({ route, navigation }) => {
           )}
         </>
       )}
+
+      <SettingsButton userId={userId} />
+      {/* Encabezado */}
+      <Text style={styles.headerText}>Hola, {userData?.nombre || "Usuario"}</Text>
+
+      {/* Ubicación y Clima */}
+      {errorMsg ? (
+        <Text style={styles.error}>{errorMsg}</Text>
+      ) : (
+        weather && (
+          <ImageBackground source={bgImage} style={styles.weatherContainer} imageStyle={styles.weatherImage}>
+            <View style={styles.weatherOverlay}>
+              <View style={styles.weatherRow}>
+                <Ionicons name="location" size={22} color="white" />
+                <Text style={styles.weatherText}>
+                  {weather?.name}, {weather?.sys.country}
+                </Text>
+              </View>
+              <View style={styles.weatherRow}>
+                <MaterialCommunityIcons name="weather-cloudy" size={22} color="white" />
+                <Text style={styles.weatherText}>
+                  {translateWeatherDescription(weather?.weather[0].description)}
+                </Text>
+              </View>
+              <View style={styles.weatherRow}>
+                <FontAwesome5 name="temperature-high" size={22} color="white" />
+                <Text style={styles.weatherText}>
+                  {weather?.main.temp}°C (Sensación: {weather?.main.feels_like}°C)
+                </Text>
+              </View>
+              <View style={styles.weatherRow}>
+                <MaterialCommunityIcons name="weather-windy" size={22} color="white" />
+                <Text style={styles.weatherText}>Viento: {weather?.wind.speed} m/s</Text>
+              </View>
+              <View style={styles.weatherRow}>
+                <MaterialCommunityIcons name="water-percent" size={22} color="white" />
+                <Text style={styles.weatherText}>Humedad: {weather?.main.humidity}%</Text>
+              </View>
+              <View style={styles.weatherRow}>
+                <MaterialCommunityIcons name="weather-fog" size={22} color="white" />
+                <Text style={styles.weatherText}>Nubosidad: {weather?.clouds.all}%</Text>
+              </View>
+            </View>
+          </ImageBackground>
+        )
+      )}
+
+      {/* Sección de Cultivos */}
+      <Text style={styles.sectionTitle}>Mis Cultivos</Text>
+      {/* Botón para seleccionar nuevos cultivos */}
+      <TouchableOpacity
+        style={styles.addButton}
+        onPress={() => navigation.navigate("SelectSembríos", { userId })}
+      >
+        <Text style={styles.addButtonText}>Añadir Cultivos</Text>
+      </TouchableOpacity>
+      <View style={styles.cultivosContainer}>
+        {userSembríos.length > 0 ? (
+          userSembríos.map((sembrío, index) => (
+            <View key={index} style={styles.cultivoBox}>
+              <ImageBackground
+                source={{ uri: sembrío.icon }}
+                style={styles.cultivoBackground}
+                imageStyle={styles.cultivoImage}
+                blurRadius={8}
+              >
+                <Text style={styles.cultivoText}>{sembrío.nombre}</Text>
+                <TouchableOpacity
+                  style={styles.cultivoButton}
+                  onPress={() =>
+                    navigation.navigate("SembríoDetalles", {
+                      sembríoId: sembrío.id,
+                      sembríoNombre: sembrío.nombre,
+                      sembríoDetalles: sembrío.detalles,
+                    })
+                  }
+                >
+                  <Text style={styles.cultivoButtonText}>Ver más</Text>
+                </TouchableOpacity>
+              </ImageBackground>
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noCultivosText}>No hay cultivos registrados.</Text>
+        )}
+      </View>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-    padding: 20,
-    backgroundColor: '#f5f5f5',
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: "#fff",
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 32,
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 20,
-    textAlign: 'center',
-  },
-  weatherContainer: {
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
   },
   error: {
+    color: "red",
+    textAlign: "center",
+  },
+  weatherContainer: {
+    padding: 20,
+    marginBottom: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+  },
+  weatherRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
+  },
+  weatherText: {
+    marginLeft: 10,
     fontSize: 16,
-    color: 'red',
-    textAlign: 'center',
+    color: "white",
   },
-  userInfo: {
-    marginTop: 20,
+  sectionTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginVertical: 10,
+  },
+  addButton: {
+    backgroundColor: "#3cba54",
     padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    backgroundColor: "#e6f7ff",
-  },
-  box: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: 15,
     marginBottom: 15,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    backgroundColor: '#ffffff',
-  },
-  icon: {
-    width: 40,
-    height: 40,
-    marginRight: 10,
-  },
-  button: {
-    backgroundColor: '#007BFF',
-    padding: 10,
+    alignItems: "center",
     borderRadius: 5,
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  addButtonText: {
+    fontSize: 18,
+    color: "white",
+  },
+  cultivoBox: {
+    flex: 1,
+    marginBottom: 20,
+    borderRadius: 10,
+    overflow: "hidden",
+    height: 120,
+  },
+  cultivoBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  cultivoImage: {
+    borderRadius: 10,
+  },
+  cultivoText: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
+  },
+  cultivoButton: {
+    backgroundColor: "#fff",
+    padding: 5,
+    marginTop: 10,
+    borderRadius: 5,
+  },
+  cultivoButtonText: {
+    fontSize: 16,
+    color: "#3cba54",
+  },
+  noCultivosText: {
+    textAlign: "center",
+    fontSize: 18,
   },
 });
 
 export default HomeScreen;
+
