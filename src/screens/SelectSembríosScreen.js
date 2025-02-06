@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Image, TextInput, ScrollView, SafeAreaView } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // ✅ Nuevo selector de categorías
-import api from "../services/api"; // Usa api.js para conectar con el backend
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  ScrollView,
+  SafeAreaView,
+} from "react-native";
+import { Picker } from "@react-native-picker/picker"; // ✅ Selector de categorías
+import api from "../services/api"; // ✅ Conexión con backend
 import { Ionicons } from "@expo/vector-icons";
 
 const SelectSembríosScreen = ({ route }) => {
@@ -84,15 +94,19 @@ const SelectSembríosScreen = ({ route }) => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
         <Text style={styles.title}>Selecciona tus Sembríos</Text>
-  
+
         {/* Barra de búsqueda */}
-        <TextInput
-          style={styles.searchBar}
-          placeholder="Buscar por nombre..."
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
-  
+        <View style={styles.searchContainer}>
+          <Ionicons name="search" size={20} color="#1B5E20" style={styles.searchIcon} />
+          <TextInput
+            style={styles.searchBar}
+            placeholder="Buscar por nombre..."
+            value={searchQuery}
+            onChangeText={handleSearch}
+            placeholderTextColor="#1B5E20"
+          />
+        </View>
+
         {/* Selector de categoría (Dropdown) */}
         <View style={styles.pickerContainer}>
           <Picker
@@ -105,7 +119,7 @@ const SelectSembríosScreen = ({ route }) => {
             ))}
           </Picker>
         </View>
-  
+
         {/* Lista de Sembríos */}
         <FlatList
           data={filteredSembríos}
@@ -122,12 +136,12 @@ const SelectSembríosScreen = ({ route }) => {
                 <Text style={styles.listCategory}>{item.categoria}</Text>
               </View>
               {selectedSembríos.includes(item._id) && (
-                <Ionicons name="checkmark-circle" size={24} color="#6AF84D" />
+                <Ionicons name="checkmark-circle" size={24} color="#2E7D32" />
               )}
             </TouchableOpacity>
           )}
         />
-  
+
         {/* Botón de Guardar (fijo en la parte inferior) */}
         <View style={styles.footer}>
           <TouchableOpacity style={styles.saveButton} onPress={saveSelection}>
@@ -140,33 +154,51 @@ const SelectSembríosScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: "#FAFFFA" },
-  container: { flex: 1, padding: 20, backgroundColor: "#FAFFFA" },
-  title: { fontSize: 24, fontWeight: "bold", textAlign: "center", marginBottom: 15, marginTop: 20 },
-  searchBar: {
-    backgroundColor: "#F0EDED",
-    borderRadius: 25,
-    padding: 10,
-    marginBottom: 10,
-    fontSize: 16,
-    color: "#333",
+  safeArea: { flex: 1, backgroundColor: "#FDFDFD" },
+  container: { flex: 1, padding: 20, backgroundColor: "#FDFDFD" },
+  title: {
+    fontSize: 28,
+    fontWeight: "bold",
+    textAlign: "center",
+    color: "#2E7D32",
+    marginBottom: 20,
   },
-  pickerContainer: {
-    backgroundColor: "#F0EDED",
+  
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#E8F5E9",
     borderRadius: 25,
-    marginBottom: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    marginBottom: 15,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  searchBar: {
+    flex: 1,
+    fontSize: 16,
+    color: "#1B5E20",
+  },
+
+  pickerContainer: {
+    backgroundColor: "#E8F5E9",
+    borderRadius: 25,
+    marginBottom: 15,
     paddingHorizontal: 5,
   },
   picker: {
     height: 50,
-    color: "#333",
+    color: "#1B5E20",
   },
+
   listItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 15,
     marginBottom: 10,
     shadowColor: "#000",
     shadowOpacity: 0.1,
@@ -175,7 +207,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   selectedItem: {
-    borderColor: "#6AF84D",
+    borderColor: "#2E7D32",
     borderWidth: 2,
   },
   listImage: {
@@ -184,18 +216,16 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginRight: 10,
   },
-  listTextContainer: {
-    flex: 1,
-  },
   listTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#2E7D32",
   },
   listCategory: {
     fontSize: 14,
     color: "#777",
   },
+
   footer: {
     position: "absolute",
     bottom: 10,
@@ -203,7 +233,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   saveButton: {
-    backgroundColor: "#6AF84D",
+    backgroundColor: "#2E7D32",
     borderRadius: 50,
     paddingVertical: 15,
     alignItems: "center",
@@ -211,7 +241,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#000",
+    color: "#FFF",
   },
 });
 

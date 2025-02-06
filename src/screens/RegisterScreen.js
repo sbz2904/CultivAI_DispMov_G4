@@ -11,7 +11,6 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  // Ocultar la barra de navegación
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
   }, [navigation]);
@@ -31,7 +30,7 @@ const RegisterScreen = () => {
 
       if (response.data && response.data.id) {
         Alert.alert("Éxito", "Cuenta creada con éxito");
-        navigation.navigate("Login"); // Redirigir a Login
+        navigation.navigate("Login");
       } else {
         throw new Error("No se pudo registrar el usuario");
       }
@@ -47,56 +46,56 @@ const RegisterScreen = () => {
         <Text style={styles.cultiv}>Cultiv-</Text>
         <Text style={styles.ai}>AI</Text>
       </Text>
-      <MaterialCommunityIcons name="sprout" size={50} color="#2bf532" style={styles.iconLogo} />
+      <MaterialCommunityIcons name="sprout" size={50} color="#2E7D32" style={styles.iconLogo} />
 
       {/* Título */}
       <Text style={styles.title}>Crear Cuenta</Text>
 
       {/* Campos de Registro */}
       <View style={styles.inputContainer}>
-        <Ionicons name="person-outline" size={24} color="gray" style={styles.icon} />
+        <Ionicons name="person-outline" size={24} color="#388E3C" style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="Nombre"
           value={nombre}
           onChangeText={setNombre}
-          placeholderTextColor="gray"
+          placeholderTextColor="#1B5E20"
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <MaterialCommunityIcons name="email-outline" size={24} color="gray" style={styles.icon} />
+        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="Correo Electrónico"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
-          placeholderTextColor="gray"
+          placeholderTextColor="#1B5E20"
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Ionicons name="lock-closed-outline" size={24} color="gray" style={styles.icon} />
+        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
-          placeholderTextColor="gray"
+          placeholderTextColor="#1B5E20"
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Ionicons name="lock-closed-outline" size={24} color="gray" style={styles.icon} />
+        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={styles.icon} />
         <TextInput
           style={styles.input}
           placeholder="Repetir Contraseña"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
-          placeholderTextColor="gray"
+          placeholderTextColor="#1B5E20"
         />
       </View>
 
@@ -111,7 +110,7 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAFFFA",
+    backgroundColor: "#FDFDFD", // Fondo blanco puro
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
@@ -122,10 +121,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   cultiv: {
-    color: "#201010",
+    color: "#2E7D32", // Verde principal
   },
   ai: {
-    color: "#2bf532",
+    color: "#388E3C", // Verde secundario
   },
   iconLogo: {
     marginBottom: 20,
@@ -133,36 +132,38 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#171515",
+    color: "#2E7D32", // Verde principal
     marginBottom: 30,
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F0EDED",
+    backgroundColor: "#F0F0F0", // Gris claro
     borderRadius: 50,
     padding: 15,
     width: "85%",
     marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#388E3C", // Verde secundario
   },
   icon: {
     marginRight: 10,
   },
   input: {
     flex: 1,
-    color: "#333",
+    color: "#1B5E20", // Verde oscuro para texto
     fontSize: 20,
   },
   button: {
-    backgroundColor: "#6AF84D",
+    backgroundColor: "#2E7D32", // Verde principal sólido
     borderRadius: 50,
     paddingVertical: 15,
     width: "60%",
     alignItems: "center",
-    marginTop: 10,
+    marginBottom: 20,
   },
   buttonText: {
-    color: "#000",
+    color: "#FFF",
     fontSize: 20,
     fontWeight: "bold",
   },

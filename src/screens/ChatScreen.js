@@ -1,69 +1,76 @@
-import React, { useState } from "react";
-import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity } from "react-native";
-import api from "../services/api"; // ✅ Se usa api.js para conectar con el backend
+import React, { useState, useEffect } from "react";
+import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import api from "../services/api";
 import { getWeather } from "../services/weatherService";
 import { getLocation } from "../services/locationService";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-const FontFamily = {
-  robotoRegular: "Roboto-Regular",
-  robotoBold: "Roboto-Bold",
-  sFProText: "SF Pro Text",
-};
-const FontSize = {
-  size_base: 16,
-  size_5xl: 24,
-  size_2xs: 11,
-};
-const Color = {
-  colorWhite: "#fff",
-  colorGray_100: "rgba(0, 0, 0, 0.25)",
-  colorBlack: "#000",
-};
-const Border = {
-  br_5xs: 8,
-};
-
 const ChatScreen = () => {
   const [userInput, setUserInput] = useState("");
   const [chatLog, setChatLog] = useState([]);
+  const [isBotTyping, setIsBotTyping] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const navigation = useNavigation();
 
+  useEffect(() => {
+    navigation.setOptions({ headerShown: false }); // Oculta la pestaña de navegación
+  }, [navigation]);
+  
   const sendMessage = async () => {
     if (!userInput.trim()) return;
 
+    setChatLog([...chatLog, { user: userInput, bot: "typing..." }]);
+    setIsBotTyping(true);
+    setUserInput(""); 
+
     try {
-      // Obtener la ubicación y clima
       const { latitude, longitude } = await getLocation();
       const weatherData = await getWeather(latitude, longitude);
 
-      // Enviar el mensaje al chatbot usando api.js
       const response = await api.post("/chatbot", {
         message: userInput,
         weather_data: weatherData,
       });
 
-      // Actualizar el chat con el mensaje del usuario y la respuesta del bot
-      setChatLog([...chatLog, { user: userInput, bot: response.data.response }]);
-      setUserInput(""); // Limpia la entrada del usuario
+      setChatLog((prevChat) =>
+        prevChat.map((msg, i) =>
+          i === prevChat.length - 1 ? { ...msg, bot: response.data.response } : msg
+        )
+      );
     } catch (error) {
-      setErrorMsg("Hubo un problema al procesar tu mensaje.");
+      setChatLog((prevChat) =>
+        prevChat.map((msg, i) =>
+          i === prevChat.length - 1 ? { ...msg, bot: "Lo siento, hubo un error." } : msg
+        )
+      );
+    } finally {
+      setIsBotTyping(false);
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Mensajes del Chat */}
+      <View style={styles.header}>
+        <MaterialCommunityIcons name="sprout" size={30} color="#2E7D32" />
+        <Text style={styles.headerText}>Chat con Culti</Text>
+      </View>
+
       <ScrollView style={styles.chatContainer}>
         {chatLog.map((log, index) => (
-          <View key={index} style={styles.messageContainer}>
-            <View style={styles.userMessage}>
-              <Text style={styles.userText}>Tú: {log.user}</Text>
+          <View key={index} style={styles.messageWrapper}>
+            <View style={[styles.userMessage, { marginBottom: 10 }]}>
+              <Text style={styles.userText}>{log.user}</Text>
             </View>
-            <View style={styles.botMessage}>
-              <Text style={styles.botText}>
-                {log.bot && typeof log.bot === "string" ? `Bot: ${log.bot}` : "Bot: No tengo una respuesta adecuada."}
-              </Text>
+            <View style={[styles.botMessage, { marginTop: 10 }]}>
+              {log.bot === "typing..." ? (
+                <View style={styles.typingContainer}>
+                  <ActivityIndicator size="small" color="#388E3C" />
+                  <Text style={styles.typingText}>Culti está escribiendo...</Text>
+                </View>
+              ) : (
+                <Text style={styles.botText}>{log.bot}</Text>
+              )}
             </View>
           </View>
         ))}
@@ -71,16 +78,15 @@ const ChatScreen = () => {
 
       {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
 
-      {/* Entrada de texto y botón de enviar */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
           value={userInput}
           onChangeText={setUserInput}
           placeholder="Escribe tu mensaje..."
-          placeholderTextColor="gray"
+          placeholderTextColor="#1B5E20"
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+        <TouchableOpacity style={styles.sendButton} onPress={sendMessage} disabled={isBotTyping}>
           <Ionicons name="send" size={24} color="white" />
         </TouchableOpacity>
       </View>
@@ -88,43 +94,69 @@ const ChatScreen = () => {
   );
 };
 
-// Estilos de ChatScreen
+// **Estilos con más espacio entre los mensajes**
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#FDFDFD",
     padding: 20,
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderColor: "#E0E0E0",
+    marginBottom: 15,
+  },
+  headerText: {
+    paddingVertical: 29,
+    fontSize: 24,
+    fontWeight: "bold",
+    color: "#2E7D32",
+    marginLeft: 10,
   },
   chatContainer: {
     flex: 1,
     marginBottom: 10,
   },
-  messageContainer: {
-    marginBottom: 15,
+  messageWrapper: {
+    marginBottom: 20, // Más espacio entre mensajes de usuario y bot
   },
   userMessage: {
     alignSelf: "flex-end",
-    backgroundColor: "#DCF8C6",
-    padding: 10,
-    borderRadius: Border.br_5xs,
+    backgroundColor: "#C8E6C9",
+    padding: 12,
+    borderRadius: 20,
     maxWidth: "80%",
+    marginBottom: 5, // Espaciado inferior para que no esté pegado al siguiente mensaje
   },
   botMessage: {
     alignSelf: "flex-start",
-    backgroundColor: "#EAEAEA",
-    padding: 10,
-    borderRadius: Border.br_5xs,
+    backgroundColor: "#E8F5E9",
+    padding: 12,
+    borderRadius: 20,
     maxWidth: "80%",
+    marginTop: 5, // Espaciado superior para más separación del mensaje anterior
   },
   userText: {
-    fontFamily: FontFamily.robotoBold,
-    fontSize: FontSize.size_base,
-    color: Color.colorBlack,
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1B5E20",
   },
   botText: {
-    fontFamily: FontFamily.robotoRegular,
-    fontSize: FontSize.size_base,
-    color: Color.colorBlack,
+    fontSize: 16,
+    color: "#2E7D32",
+  },
+  typingContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  typingText: {
+    fontSize: 14,
+    color: "#388E3C",
+    marginLeft: 8,
   },
   error: {
     color: "red",
@@ -134,28 +166,24 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
-    borderRadius: Border.br_5xs,
-    backgroundColor: "#fff",
+    borderRadius: 50,
+    backgroundColor: "#F0F0F0",
     paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingVertical: 12,
     marginTop: 10,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: "#388E3C",
   },
   input: {
     flex: 1,
-    fontSize: FontSize.size_base,
-    fontFamily: FontFamily.robotoRegular,
-    color: "#333",
+    fontSize: 18,
+    color: "#1B5E20",
   },
   sendButton: {
     marginLeft: 10,
-    backgroundColor: "#28a745",
-    padding: 10,
-    borderRadius: Border.br_5xs,
+    backgroundColor: "#2E7D32",
+    padding: 12,
+    borderRadius: 50,
   },
 });
 

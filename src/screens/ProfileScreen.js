@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons"; // Iconos de Expo Icons
 import api from "../services/api"; // ✅ Usa api.js para las peticiones al backend
 
 const ProfileScreen = ({ route }) => {
@@ -16,7 +17,6 @@ const ProfileScreen = ({ route }) => {
     fetchUserData();
   }, []);
 
-  // ✅ Obtener datos del usuario
   const fetchUserData = async () => {
     try {
       const response = await api.get(`/users/${userId}`);
@@ -28,25 +28,22 @@ const ProfileScreen = ({ route }) => {
     }
   };
 
-  // ✅ Actualizar datos del usuario
   const handleUpdate = async () => {
     try {
       const updatedData = {
         nombre: newName,
-        profileImage: profileImage || userData.profileImage, // Mantiene la imagen previa si no se cambia
+        profileImage: profileImage || userData.profileImage,
       };
 
-      await api.put(`/users/${userId}`, updatedData); // ✅ Usa api.js para actualizar
-
+      await api.put(`/users/${userId}`, updatedData);
       Alert.alert("Éxito", "Perfil actualizado correctamente");
-      setIsEditing(false); // Bloquear campos después de guardar
-      fetchUserData(); // Recargar datos actualizados
+      setIsEditing(false);
+      fetchUserData();
     } catch (error) {
       Alert.alert("Error", "No se pudo actualizar el perfil");
     }
   };
 
-  // ✅ Seleccionar imagen de perfil
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -60,7 +57,6 @@ const ProfileScreen = ({ route }) => {
     }
   };
 
-  // ✅ Cerrar sesión
   const handleLogout = () => {
     Alert.alert("Cerrar Sesión", "¿Estás seguro de que quieres cerrar sesión?", [
       { text: "Cancelar", style: "cancel" },
@@ -70,6 +66,11 @@ const ProfileScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.logoText}>
+        <Text style={styles.cultiv}>Cultiv-</Text>
+        <Text style={styles.ai}>AI</Text>
+      </Text>
+
       {/* Imagen de Perfil */}
       <TouchableOpacity onPress={pickImage}>
         <Image
@@ -78,25 +79,37 @@ const ProfileScreen = ({ route }) => {
         />
       </TouchableOpacity>
 
-      {/* Nombre del usuario */}
-      <Text style={styles.greeting}>Hola, {userData.nombre || "Usuario"}</Text>
+      <Text style={styles.title}>Mi Perfil</Text>
 
-      {/* Campos de Nombre y Correo */}
-      <Text style={styles.label}>Nombre</Text>
-      <TextInput
-        style={styles.input}
-        value={newName}
-        onChangeText={setNewName}
-        editable={isEditing} // Solo editable cuando se presiona "Actualizar Perfil"
-      />
+      {/* Campo de Nombre */}
+      <View style={styles.inputContainer}>
+        <MaterialCommunityIcons name="account-outline" size={24} color="#388E3C" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          value={newName}
+          onChangeText={setNewName}
+          editable={isEditing}
+          placeholder="Nombre"
+          placeholderTextColor="#1B5E20"
+        />
+      </View>
 
-      <Text style={styles.label}>Correo Electrónico</Text>
-      <TextInput style={styles.input} value={userData.email} editable={false} />
+      {/* Campo de Correo */}
+      <View style={styles.inputContainer}>
+        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          value={userData.email}
+          editable={false}
+          placeholder="Correo Electrónico"
+          placeholderTextColor="#1B5E20"
+        />
+      </View>
 
-      {/* Botón de Actualizar Perfil */}
+      {/* Botón de Actualizar */}
       {!isEditing ? (
         <TouchableOpacity style={styles.button} onPress={() => setIsEditing(true)}>
-          <Text style={styles.buttonText}>Actualizar Perfil</Text>
+          <Text style={styles.buttonText}>Editar Perfil</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity style={styles.button} onPress={handleUpdate}>
@@ -115,59 +128,73 @@ const ProfileScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FAFFFA",
+    backgroundColor: "#FDFDFD", // Fondo blanco puro
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
+  },
+  logoText: {
+    fontFamily: "Lobster-Regular",
+    fontSize: 44,
+    textAlign: "center",
+  },
+  cultiv: {
+    color: "#2E7D32", // Verde natural principal
+  },
+  ai: {
+    color: "#388E3C", // Verde secundario
   },
   profileImage: {
     width: 120,
     height: 120,
     borderRadius: 60,
     borderWidth: 2,
-    borderColor: "#6AF84D",
-    marginBottom: 15,
-  },
-  greeting: {
-    fontSize: 24,
-    fontWeight: "bold",
+    borderColor: "#388E3C",
     marginBottom: 20,
   },
-  label: {
-    fontSize: 18,
-    fontWeight: "600",
-    alignSelf: "flex-start",
-    marginBottom: 5,
-    color: "#333",
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#2E7D32",
+    marginBottom: 20,
   },
-  input: {
-    backgroundColor: "#F0EDED",
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#F0F0F0",
     borderRadius: 50,
     padding: 15,
     width: "85%",
     marginBottom: 20,
-    fontSize: 16,
-    textAlign: "center",
-    color: "#333",
+    borderWidth: 1,
+    borderColor: "#388E3C",
+  },
+  icon: {
+    marginRight: 10,
+  },
+  input: {
+    flex: 1,
+    color: "#1B5E20",
+    fontSize: 18,
   },
   button: {
-    backgroundColor: "#6AF84D",
+    backgroundColor: "#2E7D32",
     borderRadius: 50,
     paddingVertical: 15,
-    width: "85%",
+    width: "60%",
     alignItems: "center",
-    marginTop: 10,
+    marginBottom: 20,
   },
   buttonText: {
-    color: "#000",
+    color: "#FFF",
     fontSize: 20,
     fontWeight: "bold",
   },
   logoutButton: {
-    backgroundColor: "#FF4D4D",
+    backgroundColor: "#D32F2F",
     borderRadius: 50,
     paddingVertical: 15,
-    width: "85%",
+    width: "60%",
     alignItems: "center",
     marginTop: 20,
   },

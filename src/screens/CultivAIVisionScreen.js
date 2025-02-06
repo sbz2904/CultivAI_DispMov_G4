@@ -1,31 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity, Image, ActivityIndicator, StyleSheet, Alert, ScrollView} from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ActivityIndicator,
+  StyleSheet,
+  Alert,
+  ScrollView,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { getLocation } from "../services/locationService";
 import { getWeather, translateWeatherDescription } from "../services/weatherService";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const GOOGLE_VISION_API_KEY = "";
+const GOOGLE_VISION_API_KEY = "AIzaSyA7-guwoTeZ8bkh-Ooxb_KyVwEBh1I9_kA";
 const GOOGLE_VISION_URL = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
-const GEMINI_API_KEY = "";
+const GEMINI_API_KEY = "AIzaSyCkXZNDIA_AF9Ruk3aM2SCz4qMIgT5-3mQ";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const validLabels = ["corn", "wheat", "broccoli", "lettuce", "carrot", "tomato", "potato", "soybean", "rice", "barley"];
 
 const labelTranslations = {
-    "corn": "Maíz",
-    "wheat": "Trigo",
-    "broccoli": "Brócoli",
-    "lettuce": "Lechuga",
-    "carrot": "Zanahoria",
-    "tomato": "Tomate",
-    "potato": "Papa",
-    "soybean": "Soja",
-    "rice": "Arroz",
-    "barley": "Cebada"
+  "corn": "Maíz",
+  "wheat": "Trigo",
+  "broccoli": "Brócoli",
+  "lettuce": "Lechuga",
+  "carrot": "Zanahoria",
+  "tomato": "Tomate",
+  "potato": "Papa",
+  "soybean": "Soja",
+  "rice": "Arroz",
+  "barley": "Cebada"
 };
 
 const translateLabel = (label) => labelTranslations[label.toLowerCase()] || label;
@@ -51,13 +60,23 @@ const CultivAIVisionScreen = () => {
     }
   };
 
-  const pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
-    });
+  const pickImage = async (fromCamera) => {
+    let result;
+    if (fromCamera) {
+      result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+    } else {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+    }
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
@@ -144,110 +163,141 @@ const CultivAIVisionScreen = () => {
     }
 };
 
-return (
+  return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.container}>
-            <Text style={styles.title}>CultivAI Vision</Text>
-            {weather && (
-                <Text style={styles.weatherText}>
-                    Clima actual: {translateWeatherDescription(weather.weather[0].description)}, {weather.main.temp}°C
-                </Text>
-            )}
-            <TouchableOpacity style={styles.button} onPress={pickImage}>
-                <Ionicons name="image-outline" size={24} color="white" />
-                <Text style={styles.buttonText}>Seleccionar Imagen</Text>
-            </TouchableOpacity>
-            {image && <Image source={{ uri: image }} style={styles.image} />}
-            {loading && <ActivityIndicator size="large" color="#28a745" />}
-            {prediction && (
-                <View style={styles.predictionContainer}>
-                    <Text style={styles.predictionText}>{prediction.description}</Text>
-                </View>
-            )}
-            {recommendation && (
-                <View style={styles.recommendationContainer}>
-                    <Text style={styles.recommendationTitle}>Recomendación:</Text>
-                    <Text style={styles.recommendationText}>{recommendation}</Text>
-                </View>
-            )}
-        </View>
-    </ScrollView>
-);
+      <View style={styles.container}>
+        <Text style={styles.title}>CultivAI Vision</Text>
 
+        {weather && (
+          <Text style={styles.weatherText}>
+            Clima actual: {translateWeatherDescription(weather.weather[0].description)}, {weather.main.temp}°C
+          </Text>
+        )}
+
+        {/* Botones de selección de imagen y cámara */}
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => pickImage(false)}>
+            <MaterialCommunityIcons name="folder-upload" size={30} color="#FFF" />
+          </TouchableOpacity>
+          <Text style={styles.buttonLabel}>Subir foto</Text>
+
+          <TouchableOpacity style={styles.iconButton} onPress={() => pickImage(true)}>
+            <Ionicons name="camera" size={30} color="#FFF" />
+          </TouchableOpacity>
+          <Text style={styles.buttonLabel}>Tomar foto</Text>
+        </View>
+
+        {/* Imagen seleccionada */}
+        {image && <Image source={{ uri: image }} style={styles.image} />}
+
+        {/* Indicador de carga */}
+        {loading && <ActivityIndicator size="large" color="#2E7D32" />}
+
+        {/* Predicción de la imagen */}
+        {prediction && (
+          <View style={styles.predictionContainer}>
+            <Text style={styles.predictionText}>{prediction.description}</Text>
+          </View>
+        )}
+
+        {/* Recomendación basada en la imagen */}
+        {recommendation && (
+          <View style={styles.recommendationContainer}>
+            <Text style={styles.recommendationTitle}>Recomendación:</Text>
+            <Text style={styles.recommendationText}>{recommendation}</Text>
+          </View>
+        )}
+      </View>
+    </ScrollView>
+  );
 };
 
 const styles = StyleSheet.create({
-    scrollContainer: {
-        flexGrow: 1,
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 20,
-    },
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "#FAFFFA",
-      padding: 20,
-    },
-    title: {
-      fontSize: 24,
-      fontWeight: "bold",
-      marginBottom: 20,
-    },
-    weatherText: {
-      fontSize: 18,
-      marginBottom: 10,
-    },
-    button: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: "#28a745",
-      padding: 15,
-      borderRadius: 10,
-      marginBottom: 20,
-    },
-    buttonText: {
-      color: "white",
-      fontSize: 18,
-      marginLeft: 10,
-    },
-    image: {
-      width: 250,
-      height: 250,
-      borderRadius: 10,
-      marginBottom: 20,
-    },
-    predictionContainer: {
-      backgroundColor: "#EAEAEA",
-      padding: 15,
-      borderRadius: 10,
-    },
-    predictionText: {
-      fontSize: 18,
-      fontWeight: "bold",
-      textAlign: "center",
-    },
-    recommendationContainer: {
-      backgroundColor: "#EAF7EA",
-      padding: 15,
-      borderRadius: 10,
-      marginTop: 10,
-    },
-    recommendationTitle: {
-      fontSize: 18,
-      fontWeight: "bold",
-    },
-    recommendationText: {
-      fontSize: 16,
-    },
-  });
-  
-  export default CultivAIVisionScreen;
-  
-  
-  
-  
+  scrollContainer: {
+    backgroundColor: "#FDFDFD",
+    flexGrow: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
+  },
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#FDFDFD", // Fondo blanco puro
+    padding: 20,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: "#2E7D32", // Verde principal
+    marginBottom: 20,
+  },
+  weatherText: {
+    fontSize: 18,
+    color: "#1B5E20", // Verde oscuro
+    marginBottom: 10,
+  },
 
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 15,
+  },
+  iconButton: {
+    backgroundColor: "#388E3C",
+    borderRadius: 50,
+    width: 60,
+    height: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 15,
+  },
+  buttonLabel: {
+    textAlign: "center",
+    color: "#1B5E20",
+    fontSize: 14,
+    marginTop: 5,
+  },
 
+  image: {
+    width: 250,
+    height: 250,
+    borderRadius: 10,
+    marginBottom: 20,
+  },
 
+  predictionContainer: {
+    backgroundColor: "#E8F5E9",
+    padding: 15,
+    borderRadius: 10,
+    width: "90%",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  predictionText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#2E7D32",
+  },
+
+  recommendationContainer: {
+    backgroundColor: "#E8F5E9",
+    padding: 15,
+    borderRadius: 10,
+    width: "90%",
+    marginTop: 10,
+  },
+  recommendationTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#2E7D32",
+  },
+  recommendationText: {
+    fontSize: 16,
+    color: "#1B5E20",
+  },
+});
+
+export default CultivAIVisionScreen;

@@ -12,7 +12,7 @@ const SettingsButton = ({ userId }) => {
         style={styles.button}
         onPress={() => navigation.navigate("Profile", { userId })}
       >
-        <Ionicons name="settings" size={30} color="black" />
+        <Ionicons name="settings" size={30} color="green" />
       </TouchableOpacity>
     </View>
   );

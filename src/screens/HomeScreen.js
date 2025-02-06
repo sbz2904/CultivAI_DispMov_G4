@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 30,
     fontFamily: "Montserrat-SemiBold",
-    color: "#000",
+    color: "#2E7D32",
     marginBottom: 20,
   },
   weatherContainer: {
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 24,
     fontFamily: "Inter-SemiBold",
-    color: "#1b1b1b",
+    color: "#2E7D32",
     marginBottom: 15,
     textAlign: "center",
   },
@@ -246,15 +246,15 @@ const styles = StyleSheet.create({
   cultivoButtonText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#1eab56",
+    color: "#2E7D32",
   },
   noCultivosText: {
     fontSize: 16,
-    color: "#000",
+    color: "#2E7D32",
     textAlign: "center",
   },
   addButton: {
-    backgroundColor: "#28a745",
+    backgroundColor: "#2E7D32",
     paddingVertical: 15,
     borderRadius: 15,
     alignItems: "center",
