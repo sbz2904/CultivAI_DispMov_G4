@@ -1,8 +1,8 @@
-CultivAI_DispMov_G4
+# CultivAI_DispMov_G4
 
 CultivAI es una aplicación diseñada para optimizar la gestión de cultivos mediante el uso de inteligencia artificial. Nuestro objetivo es proporcionar herramientas inteligentes que ayuden a los agricultores a mejorar la productividad y la sostenibilidad de sus cultivos.
 
-🚀 Características
+## 🚀 Características
 
 🌱 Seguimiento de condiciones ambientales para sus cultivos.
 
@@ -10,7 +10,7 @@ CultivAI es una aplicación diseñada para optimizar la gestión de cultivos med
 
 📱 Interfaz intuitiva: Fácil de usar desde dispositivos móviles.
 
-📦 Instalación
+## 📦 Instalación
 
 Clona el repositorio:
 
@@ -20,16 +20,15 @@ Accede al directorio del proyecto:
 
 cd CultivAI_DispMov_G4
 
-Instala las dependencias:
+## Instala las dependencias:
 
 npm install
 
-
-Ejecuta la aplicación:
+## Ejecuta la aplicación:
 
 npm start
 
-⚙️ Tecnologías Utilizadas
+## ⚙️ Tecnologías Utilizadas
 
 JavaScript
 
@@ -41,7 +40,7 @@ MongoDB
 
 FireBase
 
-👥 Contribuyentes
+## 👥 Contribuyentes
 
 Sebastian Baquero
 
@@ -51,7 +50,7 @@ Lenin Peñeherrera
 
 Evelyn Tito
 
-🤝 Contribución
+## 🤝 Contribución
 
 ¡Las contribuciones son bienvenidas! Sigue estos pasos:
 
