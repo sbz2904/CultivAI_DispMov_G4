@@ -130,6 +130,7 @@ const HomeScreen = ({ route }) => {
                   style={styles.cultivoButton}
                   onPress={() =>
                     navigation.navigate("SembríoDetalles", {
+                      userId: userId,
                       sembríoId: sembrío.id,
                       sembríoNombre: sembrío.nombre,
                       sembríoDetalles: sembrío.detalles,

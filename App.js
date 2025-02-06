@@ -9,7 +9,9 @@ import ProfileScreen from "./src/screens/ProfileScreen";
 import ChatScreen from "./src/screens/ChatScreen";
 import SelectSembríosScreen from "./src/screens/SelectSembríosScreen";
 import SembrioDetallesScreen from "./src/screens/SembrioDetallesScreen";
+import CultivAIVisionScreen from "./src/screens/CultivAIVisionScreen";
 import { Ionicons } from "@expo/vector-icons"; // Importamos los íconos para las tabs
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -24,8 +26,8 @@ function MainTabs() {
             iconName = "home";
           } else if (route.name === "Chat") {
             iconName = "chatbubbles";
-          } else if (route.name === "Profile") {
-            iconName = "person";
+          } else if (route.name === "CultiveAI") {
+            iconName = "camera";
           }    
           return <Ionicons name={iconName} size={size} color={color} />;
         },
@@ -35,6 +37,7 @@ function MainTabs() {
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ title: "Inicio" }} />
       <Tab.Screen name="Chat" component={ChatScreen} options={{ title: "Chatbot" }} />
+      <Tab.Screen name="CultiveAI" component={CultivAIVisionScreen} options={{ title: "CultiveAI" }} />
     </Tab.Navigator>
   );
 }
