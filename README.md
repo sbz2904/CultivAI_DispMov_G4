@@ -73,3 +73,8 @@ Este proyecto está bajo la licencia MIT.
 📬 Contacto
 
 ¿Tienes preguntas o sugerencias? Contáctanos en:🌐 GitHub Repository
+
+## Figma:
+https://www.figma.com/proto/VQc7MKka8X53e3NDE2ufgU/Untitled?node-id=0-1&t=duv5Z6rWVSiANPSn-1
+
+
