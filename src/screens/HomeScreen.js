@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
+import React, { useEffect, useState, useCallback } from 'react';
+import { StyleSheet, View, Text, Image, Button, TouchableOpacity, ScrollView, ImageBackground } from 'react-native';
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { getLocation } from "../services/locationService";
-import { getWeather, translateWeatherDescription } from "../services/weatherService";
-import { getUserById } from "../services/userService";
-import { getSembríoById } from "../services/sembriosService";
+import { getLocation } from '../services/locationService';
+import { getWeather, translateWeatherDescription } from '../services/weatherService';
+import { getUserById } from '../services/userService';
+import { getSembríoById } from '../services/sembriosService';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
-import bgImage from "../../assets/back.jpeg";
-import SettingsButton from "../components/SettingsButton";
+import bgImage from '../../assets/back.jpeg';
+import SettingsButton from '../components/SettingsButton';
 
 const HomeScreen = ({ route }) => {
   const navigation = useNavigation();
   const { userId } = route.params;
+
   const [location, setLocation] = useState(null);
   const [weather, setWeather] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -60,13 +61,68 @@ const HomeScreen = ({ route }) => {
   }, [userId]);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       fetchUserData();
     }, [])
   );
 
   return (
-    <ScrollView contentContainerStyle={styles.content}>
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>CultivAI</Text>
+
+      {errorMsg ? (
+        <Text style={styles.error}>{errorMsg}</Text>
+      ) : (
+        <>
+          {/* Datos del clima */}
+          {weather && (
+            <View style={styles.weatherContainer}>
+              <Text style={styles.text}>Nombre de usuario: {userData?.nombre}</Text>
+              <Text style={styles.text}>Ubicación: {weather?.name}, {weather?.sys.country}</Text>
+              <Text style={styles.text}>Temperatura: {weather?.main.temp} °C</Text>
+              <Text style={styles.text}>Sensación Térmica: {weather?.main.feels_like} °C</Text>
+              <Text style={styles.text}>Clima: {translateWeatherDescription(weather?.weather[0].description)}</Text>
+              <Text style={styles.text}>Velocidad del Viento: {weather?.wind.speed} m/s</Text>
+              <Text style={styles.text}>Humedad: {weather?.main.humidity}%</Text>
+              <Text style={styles.text}>Nubosidad: {weather?.clouds.all}%</Text>
+              <Button title="Recargar Ubicación y Clima" onPress={fetchLocationAndWeather} />
+            </View>
+          )}
+
+          {/* Datos del usuario */}
+          {userData && (
+            <View style={styles.userInfo}>
+              <Text style={styles.subtitle}>Mis Sembríos:</Text>
+              {userSembríos.length > 0 ? (
+                userSembríos.map((sembrío, index) => (
+                  <View key={index} style={styles.box}>
+                    {/* Ícono del sembrío */}
+                    <Image source={{ uri: sembrío.icon }} style={styles.icon} />
+                    {/* Nombre del sembrío */}
+                    <Text style={styles.text}>{sembrío.nombre}</Text>
+                    {/* Botón para ver más detalles */}
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={() =>
+                        navigation.navigate('SembríoDetalles', {
+                          sembríoId: sembrío.id,
+                          sembríoNombre: sembrío.nombre,
+                          sembríoDetalles: sembrío.detalles,
+                        })
+                      }
+                    >
+                      <Text style={styles.buttonText}>Ver más detalles</Text>
+                    </TouchableOpacity>
+                  </View>
+                ))
+              ) : (
+                <Text style={styles.text}>No hay sembríos asociados.</Text>
+              )}
+            </View>
+          )}
+        </>
+      )}
+
       <SettingsButton userId={userId} />
       {/* Encabezado */}
       <Text style={styles.headerText}>Hola, {userData?.nombre || "Usuario"}</Text>
@@ -115,8 +171,8 @@ const HomeScreen = ({ route }) => {
 
       {/* Sección de Cultivos */}
       <Text style={styles.sectionTitle}>Mis Cultivos</Text>
-        {/* Botón para seleccionar nuevos cultivos */}
-        <TouchableOpacity
+      {/* Botón para seleccionar nuevos cultivos */}
+      <TouchableOpacity
         style={styles.addButton}
         onPress={() => navigation.navigate("SelectSembríos", { userId })}
       >
@@ -126,27 +182,27 @@ const HomeScreen = ({ route }) => {
         {userSembríos.length > 0 ? (
           userSembríos.map((sembrío, index) => (
             <View key={index} style={styles.cultivoBox}>
-            <ImageBackground
-              source={{ uri: sembrío.icon }}
-              style={styles.cultivoBackground}
-              imageStyle={styles.cultivoImage}
-              blurRadius={8} // 🔥 Aplica el blur
-            >
-              <Text style={styles.cultivoText}>{sembrío.nombre}</Text>
-              <TouchableOpacity
-                style={styles.cultivoButton}
-                onPress={() =>
-                  navigation.navigate("SembríoDetalles", {
-                    sembríoId: sembrío.id,
-                    sembríoNombre: sembrío.nombre,
-                    sembríoDetalles: sembrío.detalles,
-                  })
-                }
+              <ImageBackground
+                source={{ uri: sembrío.icon }}
+                style={styles.cultivoBackground}
+                imageStyle={styles.cultivoImage}
+                blurRadius={8}
               >
-                <Text style={styles.cultivoButtonText}>Ver más</Text>
-              </TouchableOpacity>
-            </ImageBackground>
-          </View>
+                <Text style={styles.cultivoText}>{sembrío.nombre}</Text>
+                <TouchableOpacity
+                  style={styles.cultivoButton}
+                  onPress={() =>
+                    navigation.navigate("SembríoDetalles", {
+                      sembríoId: sembrío.id,
+                      sembríoNombre: sembrío.nombre,
+                      sembríoDetalles: sembrío.detalles,
+                    })
+                  }
+                >
+                  <Text style={styles.cultivoButtonText}>Ver más</Text>
+                </TouchableOpacity>
+              </ImageBackground>
+            </View>
           ))
         ) : (
           <Text style={styles.noCultivosText}>No hay cultivos registrados.</Text>
@@ -157,121 +213,93 @@ const HomeScreen = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
-  content: {
-    padding: 20,
-    marginTop: 70,
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: "#fff",
   },
-  headerText: {
-    fontSize: 30,
-    fontFamily: "Montserrat-SemiBold",
-    color: "#000",
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 20,
+  },
+  error: {
+    color: "red",
+    textAlign: "center",
   },
   weatherContainer: {
-    borderRadius: 25,
-    overflow: "hidden",
-    marginBottom: 20,
-  },
-  weatherImage: {
-    borderRadius: 25,
-  },
-  weatherOverlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    padding: 15,
-    borderRadius: 25,
+    padding: 20,
+    marginBottom: 10,
+    backgroundColor: "#f0f0f0",
+    borderRadius: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
   },
   weatherRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10,
+    marginVertical: 5,
   },
   weatherText: {
-    fontSize: 18,
-    fontFamily: "Roboto-Regular",
-    color: "#fff",
     marginLeft: 10,
+    fontSize: 16,
+    color: "white",
   },
   sectionTitle: {
-    fontSize: 24,
-    fontFamily: "Inter-SemiBold",
-    color: "#1b1b1b",
-    marginBottom: 15,
+    fontSize: 22,
+    fontWeight: "bold",
     textAlign: "center",
+    marginVertical: 10,
   },
-  cultivosContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-between",
+  addButton: {
+    backgroundColor: "#3cba54",
+    padding: 10,
+    marginBottom: 15,
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  addButtonText: {
+    fontSize: 18,
+    color: "white",
   },
   cultivoBox: {
-    width: "48%", // 📏 Hace que haya dos por fila
-    aspectRatio: 1, // 📐 Hace que sean cuadrados
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    borderRadius: 15,
-    padding: 15,
-    marginBottom: 15,
-    alignItems: "center",
-    justifyContent: "center",
+    flex: 1,
+    marginBottom: 20,
+    borderRadius: 10,
     overflow: "hidden",
+    height: 120,
   },
   cultivoBackground: {
-    width: "130%",
-    height: "130%",
-    borderRadius: 10,
-    marginBottom: 5,
-    marginTop: -30,
-    alignContent: "center",
-    alignItems: "center",
-    flex: 0.8, // 🔥 Para que ocupe todo el `cultivoBox`
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   cultivoImage: {
-    borderRadius: 15,
-    opacity: 0.5, // 🔥 Reduce un poco la opacidad para mejor contraste con el texto
-  },
-  cultivoIcon: {
-    width: 50,
-    height: 50,
-    marginBottom: 10,
+    borderRadius: 10,
   },
   cultivoText: {
-    fontSize: 18,
-    color: "#fff",
-    marginTop: 40,
-    marginBottom: -60,
-    textAlign: "center",
+    fontSize: 20,
+    color: "white",
+    fontWeight: "bold",
   },
   cultivoButton: {
-    marginTop: 80,
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    paddingVertical: 7,
-    paddingHorizontal: 15,
-    borderRadius: 15,
+    backgroundColor: "#fff",
+    padding: 5,
+    marginTop: 10,
+    borderRadius: 5,
   },
   cultivoButtonText: {
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#1eab56",
+    color: "#3cba54",
   },
   noCultivosText: {
-    fontSize: 16,
-    color: "#000",
     textAlign: "center",
-  },
-  addButton: {
-    backgroundColor: "#28a745",
-    paddingVertical: 15,
-    borderRadius: 15,
-    alignItems: "center",
-    marginTop: 1,
-    marginBottom: 20,
-  },
-  addButtonText: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#fff",
+    fontSize: 18,
   },
 });
 
 export default HomeScreen;
+
