@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getLocation } from "../services/locationService";
-import { getWeather, translateWeatherDescription } from "../services/weatherService";
-import api from "../services/api"; // ✅ Se usa api.js para conectar con el backend
-import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from "@expo/vector-icons";
-import bgImage from "../../assets/back.jpeg";
+import { getWeather} from "../services/weatherService";
+import api from "../services/api";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import SettingsButton from "../components/SettingsButton";
+
+const GEMINI_API_KEY = "AIzaSyCkXZNDIA_AF9Ruk3aM2SCz4qMIgT5-3mQ";
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const HomeScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -15,29 +18,31 @@ const HomeScreen = ({ route }) => {
   const [weather, setWeather] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [userData, setUserData] = useState({});
+  const [recommendation, setRecommendation] = useState("Cargando recomendación...");
   const [userSembríos, setUserSembríos] = useState([]);
 
   // Ocultar la barra de navegación
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
+    fetchLocationAndWeather();
+    fetchUserData();
   }, [navigation]);
 
   const fetchLocationAndWeather = async () => {
     try {
       const { latitude, longitude } = await getLocation();
       setLocation({ latitude, longitude });
-
       const weatherData = await getWeather(latitude, longitude);
       setWeather(weatherData);
-      setErrorMsg(null);
+      fetchRecommendation(weatherData);
     } catch (error) {
-      setErrorMsg("Error al obtener datos del clima");
+      setRecommendation("No se pudo obtener la recomendación del día.");
     }
   };
 
   const fetchUserData = async () => {
     try {
-      const response = await api.get(`/users/${userId}`); // ✅ Petición al backend con api.js
+      const response = await api.get(`/users/${userId}`);
       setUserData(response.data);
 
       const sembríosIds = response.data.sembrios || [];
@@ -58,6 +63,35 @@ const HomeScreen = ({ route }) => {
     }
   };
 
+  const fetchRecommendation = async (weatherData) => {
+    try {
+      if (!weatherData) {
+        throw new Error("Datos del clima no disponibles");
+      }
+      const context = `
+        En tu ubicación (${weatherData.name}), la temperatura es de ${weatherData.main.temp}°C,
+        la humedad es del ${weatherData.main.humidity}%, y el clima se describe como "${weatherData.weather[0].description}".
+        Solo responde preguntas relacionadas con la agricultura.
+      `;
+
+      const prompt = `
+        ${context}
+        ¿Qué recomendaciones puedes darme para cuidar mis sembríos en estas condiciones climáticas?, que la recomendación tenga máximo 1 linea.
+      `;
+
+      const result = await model.generateContent(prompt);
+      const candidates = result?.response?.candidates;
+      if (!candidates || candidates.length === 0) {
+        throw new Error("No se encontraron recomendaciones.");
+      }
+      const botResponse = candidates[0]?.content?.parts?.[0]?.text;
+      setRecommendation(botResponse.replace(/\*/g, '').trim());
+    } catch (error) {
+      setRecommendation("No se pudo obtener la recomendación del día.");
+    }
+  };
+
+
   useEffect(() => {
     fetchLocationAndWeather();
     fetchUserData();
@@ -73,44 +107,10 @@ const HomeScreen = ({ route }) => {
     <ScrollView contentContainerStyle={styles.content}>
       <SettingsButton userId={userId} />
       <Text style={styles.headerText}>Hola, {userData.nombre || "Usuario"}</Text>
-
-      {/* Clima */}
-      {errorMsg ? (
-        <Text style={styles.error}>{errorMsg}</Text>
-      ) : (
-        weather && (
-          <ImageBackground source={bgImage} style={styles.weatherContainer} imageStyle={styles.weatherImage}>
-            <View style={styles.weatherOverlay}>
-              <View style={styles.weatherRow}>
-                <Ionicons name="location" size={22} color="white" />
-                <Text style={styles.weatherText}>
-                  {weather.name}, {weather.sys.country}
-                </Text>
-              </View>
-              <View style={styles.weatherRow}>
-                <MaterialCommunityIcons name="weather-cloudy" size={22} color="white" />
-                <Text style={styles.weatherText}>
-                  {translateWeatherDescription(weather.weather[0].description)}
-                </Text>
-              </View>
-              <View style={styles.weatherRow}>
-                <FontAwesome5 name="temperature-high" size={22} color="white" />
-                <Text style={styles.weatherText}>
-                  {weather.main.temp}°C (Sensación: {weather.main.feels_like}°C)
-                </Text>
-              </View>
-              <View style={styles.weatherRow}>
-                <MaterialCommunityIcons name="weather-windy" size={22} color="white" />
-                <Text style={styles.weatherText}>Viento: {weather.wind.speed} m/s</Text>
-              </View>
-              <View style={styles.weatherRow}>
-                <MaterialCommunityIcons name="water-percent" size={22} color="white" />
-                <Text style={styles.weatherText}>Humedad: {weather.main.humidity}%</Text>
-              </View>
-            </View>
-          </ImageBackground>
-        )
-      )}
+      <View style={styles.recommendationContainer}>
+        <Text style={styles.recommendationTitle}>Recomendación del Día</Text>
+          <Text style={styles.recommendationText}>{recommendation}</Text>
+      </View>
 
       {/* Cultivos */}
       <Text style={styles.sectionTitle}>Mis Cultivos</Text>
@@ -166,26 +166,28 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     marginBottom: 20,
   },
-  weatherImage: {
-    borderRadius: 25,
-  },
-  weatherOverlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  recommendationContainer: {
+    backgroundColor: "#E8F5E9",
     padding: 15,
-    borderRadius: 25,
-  },
-  weatherRow: {
-    flexDirection: "row",
+    borderRadius: 10,
+    width: "100%",
+    marginTop: 10,
     alignItems: "center",
+  },
+  recommendationTitle: {
+    fontSize: 18,
+    alignSelf: "center",
+    fontWeight: "bold",
+    color: "#2E7D32",
     marginBottom: 10,
   },
-  weatherText: {
-    fontSize: 18,
-    fontFamily: "Roboto-Regular",
-    color: "#fff",
-    marginLeft: 10,
+  recommendationText: {
+    fontSize: 16,
+    color: "#1B5E20",
+    textAlign: "center",
   },
   sectionTitle: {
+    paddingVertical: 10,
     fontSize: 24,
     fontFamily: "Inter-SemiBold",
     color: "#2E7D32",

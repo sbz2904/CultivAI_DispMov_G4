@@ -9,6 +9,8 @@ import {
   TextInput,
   ScrollView,
   SafeAreaView,
+  Platform,
+  Modal
 } from "react-native";
 import { Picker } from "@react-native-picker/picker"; // ✅ Selector de categorías
 import api from "../services/api"; // ✅ Conexión con backend
@@ -22,7 +24,8 @@ const SelectSembríosScreen = ({ route }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [categories, setCategories] = useState(["Todas"]);
-
+  const [iosPickerVisible, setIosPickerVisible] = useState(false);
+  const openIosPicker = () => setIosPickerVisible(true); // 📌 Función para abrir el modal
   useEffect(() => {
     fetchSembríos();
     fetchUserSembríos();
@@ -107,18 +110,59 @@ const SelectSembríosScreen = ({ route }) => {
           />
         </View>
 
-        {/* Selector de categoría (Dropdown) */}
+          {/* Selector de categoría (Dropdown en iOS, Picker en Android) */}
+          <View style={styles.pickerWrapper}>
+  {Platform.OS === "ios" ? (
+    <>
+      <TouchableOpacity
+        style={styles.pickerButton}
+        onPress={openIosPicker} // 📌 Usa la nueva función para abrir el modal
+      >
+        <Text style={styles.pickerText}>{selectedCategory}</Text>
+      </TouchableOpacity>
+
+      <Modal visible={iosPickerVisible} transparent animationType="slide">
+  <View style={styles.modalContainer}>
+    <View style={styles.modalContent}>
+      {categories.length > 0 ? (
         <View style={styles.pickerContainer}>
           <Picker
             selectedValue={selectedCategory}
             onValueChange={(itemValue) => handleCategoryChange(itemValue)}
             style={styles.picker}
+            itemStyle={{ color: "#1B5E20" }} // 🔹 Asegurar color verde en iOS
           >
             {categories.map((category, index) => (
               <Picker.Item key={index} label={category} value={category} />
             ))}
           </Picker>
         </View>
+      ) : (
+        <Text style={styles.emptyText}>No hay categorías disponibles</Text>
+      )}
+
+      <TouchableOpacity onPress={() => setIosPickerVisible(false)}>
+        <Text style={styles.closeText}>Cerrar</Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+</Modal>
+
+    </>
+  ) : (
+    <Picker
+      selectedValue={selectedCategory}
+      onValueChange={(itemValue) => handleCategoryChange(itemValue)}
+      style={styles.picker}
+      mode="dropdown"
+    >
+      {categories.map((category, index) => (
+        <Picker.Item key={index} label={category} value={category} />
+      ))}
+    </Picker>
+  )}
+</View>
+
 
         {/* Lista de Sembríos */}
         <FlatList
@@ -182,16 +226,6 @@ const styles = StyleSheet.create({
     color: "#1B5E20",
   },
 
-  pickerContainer: {
-    backgroundColor: "#E8F5E9",
-    borderRadius: 25,
-    marginBottom: 15,
-    paddingHorizontal: 5,
-  },
-  picker: {
-    height: 50,
-    color: "#1B5E20",
-  },
 
   listItem: {
     flexDirection: "row",
@@ -242,6 +276,59 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#FFF",
+  },
+  pickerWrapper: {
+    backgroundColor: "#E8F5E9",
+    borderRadius: 25,
+    marginBottom: 15,
+    paddingHorizontal: 15,
+  },
+  pickerButton: {
+    padding: 10,
+    backgroundColor: "#E8F5E9",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  pickerText: {
+    fontSize: 16,
+    color: "#1B5E20",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.5)",
+  },
+  modalContent: {
+    backgroundColor: "#F0F0F0",
+    padding: 20,
+    borderRadius: 10,
+    width: "90%", // 📌 Se asegura que cubra el ancho correctamente
+    minHeight: 300, // 📌 Asegurar suficiente altura para el Picker
+    justifyContent: "center",
+  },
+  closeText: {
+    textAlign: "center",
+    marginTop: 10,
+    color: "#D32F2F",
+    fontSize: 16,
+  },
+  emptyText: {
+    textAlign: "center",
+    fontSize: 18,
+    color: "#777",
+    marginBottom: 10,
+  },
+  pickerContainer: {
+    backgroundColor: "#FFF",
+    borderRadius: 10,
+    padding: 10,
+    width: "100%",
+  },
+  picker: {
+    height: 200,
+    width: "100%",
+    color: "#1B5E20",
   },
 });
 

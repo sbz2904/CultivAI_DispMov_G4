@@ -13,7 +13,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "NSCameraUsageDescription": "Esta aplicación necesita acceso a la cámara para tomar fotos.",
+      "NSPhotoLibraryUsageDescription": "Esta aplicación necesita acceso a la galería para subir imágenes."
     },
     "android": {
       "adaptiveIcon": {

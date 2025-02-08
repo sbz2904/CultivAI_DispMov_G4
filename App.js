@@ -7,7 +7,7 @@ import RegisterScreen from "./src/screens/RegisterScreen";
 import HomeScreen from "./src/screens/HomeScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import ChatScreen from "./src/screens/ChatScreen";
-import SelectSembríosScreen from "./src/screens/SelectSembríosScreen";
+import SelectSembríosScreen from "./src/screens/SelectSembriosScreen";
 import SembrioDetallesScreen from "./src/screens/SembrioDetallesScreen";
 import CultivAIVisionScreen from "./src/screens/CultivAIVisionScreen";
 import { Ionicons } from "@expo/vector-icons"; // Importamos los íconos para las tabs

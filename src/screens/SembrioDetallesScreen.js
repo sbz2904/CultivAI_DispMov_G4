@@ -15,6 +15,11 @@ import {
 import api from '../services/api';
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
+const GEMINI_API_KEY = "AIzaSyCkXZNDIA_AF9Ruk3aM2SCz4qMIgT5-3mQ";
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const SembrioDetallesScreen = ({ route }) => {
   const { userId, sembríoId, sembríoNombre, sembríoDetalles } = route.params;
@@ -25,6 +30,10 @@ const SembrioDetallesScreen = ({ route }) => {
   const [modalImageVisible, setModalImageVisible] = useState(false);
   const [modalNoteVisible, setModalNoteVisible] = useState(false);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [chatModalVisible, setChatModalVisible] = useState(false);
+  const [userMessage, setUserMessage] = useState('');
+  const [chatResponse, setChatResponse] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchNotes();
@@ -50,6 +59,13 @@ const SembrioDetallesScreen = ({ route }) => {
   };
 
   const pickImage = async (fromCamera) => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+  
+    if (status !== 'granted') {
+      alert('Se necesita permiso para acceder a la cámara.');
+      return;
+    }
+  
     let result;
     if (fromCamera) {
       result = await ImagePicker.launchCameraAsync({
@@ -64,7 +80,7 @@ const SembrioDetallesScreen = ({ route }) => {
         quality: 1,
       });
     }
-
+  
     if (!result.canceled && result.assets?.length > 0) {
       const formData = new FormData();
       formData.append('file', {
@@ -72,7 +88,7 @@ const SembrioDetallesScreen = ({ route }) => {
         type: 'image/jpeg',
         name: 'upload.jpg',
       });
-
+  
       try {
         await api.post(`/sembrios/${sembríoId}/imagenes/${userId}`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
@@ -83,6 +99,7 @@ const SembrioDetallesScreen = ({ route }) => {
       }
     }
   };
+  
 
   const addNote = async () => {
     if (newNote.trim()) {
@@ -96,10 +113,28 @@ const SembrioDetallesScreen = ({ route }) => {
     }
   };
 
+  const askChatbot = async () => {
+    if (!userMessage.trim()) return;
+    setLoading(true);
+    setChatResponse('');
+    
+    try {
+      const context = `El usuario tiene un sembrío de ${sembríoNombre}. Estas son sus notas previas: ${notes.map(n => n.content).join(" | ")}. Responde solo sobre este cultivo y brinda información relevante de manera breve.`;
+      const prompt = `${context} Pregunta del usuario: ${userMessage}`;
+      const result = await model.generateContent(prompt);
+      const botResponse = result?.response?.candidates?.[0]?.content?.parts?.[0]?.text || "No se encontró respuesta.";
+      setChatResponse(botResponse.replace(/\*/g, '').trim());
+    } catch (error) {
+      setChatResponse("Error al obtener respuesta.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.container}>
-        <Text style={styles.title}>{sembríoNombre}</Text>
+      <Text style={styles.title}>{String(sembríoNombre)}</Text>
 
         {/* Galería de imágenes */}
         <FlatList
@@ -121,13 +156,17 @@ const SembrioDetallesScreen = ({ route }) => {
           <TouchableOpacity style={styles.iconButton} onPress={() => pickImage(false)}>
             <MaterialCommunityIcons name="folder-upload" size={30} color="#FFF" />
           </TouchableOpacity>
-          <Text style={styles.buttonLabel}>Subir foto</Text>
 
           <TouchableOpacity style={styles.iconButton} onPress={() => pickImage(true)}>
             <Ionicons name="camera" size={30} color="#FFF" />
           </TouchableOpacity>
-          <Text style={styles.buttonLabel}>Tomar foto</Text>
+
+          <TouchableOpacity style={styles.iconButton} onPress={() => setChatModalVisible(true)}>
+            <Ionicons name="chatbubble-ellipses" size={30} color="#FFF" />
+          </TouchableOpacity>
         </View>
+
+
 
         {/* Sección de notas */}
         <View style={styles.notesSection}>
@@ -154,7 +193,7 @@ const SembrioDetallesScreen = ({ route }) => {
             </TouchableOpacity>
           ))}
         </View>
-      </ScrollView>
+      
 
       {/* Modal para mostrar imagen en pantalla completa */}
       <Modal visible={modalImageVisible} transparent={true} animationType="fade">
@@ -165,6 +204,7 @@ const SembrioDetallesScreen = ({ route }) => {
           </TouchableOpacity>
         </View>
       </Modal>
+      </ScrollView>
 
        {/* Modal para mostrar notas con diseño mejorado */}
        <Modal visible={modalNoteVisible} transparent={true} animationType="fade">
@@ -180,6 +220,24 @@ const SembrioDetallesScreen = ({ route }) => {
           </View>
         </View>
       </Modal>
+
+      {/* Modal del chatbot */}
+      <Modal visible={chatModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.chatBox}>
+            <TouchableOpacity style={styles.closeIcon} onPress={() => setChatModalVisible(false)}>
+              <Ionicons name="close" size={24} color="#2E7D32" />
+            </TouchableOpacity>
+            <Text style={styles.chatTitle}>Chatbot de {sembríoNombre}</Text>
+            <TextInput style={styles.chatInput} placeholder="Escribe tu pregunta..." value={userMessage} onChangeText={setUserMessage} />
+            <TouchableOpacity style={styles.sendButton} onPress={askChatbot}>
+              <Ionicons name="send" size={24} color="#FFF" />
+            </TouchableOpacity>
+            {loading ? <Text style={styles.loadingText}>Cargando respuesta...</Text> : null}
+            {chatResponse ? <Text style={styles.chatResponse}>{String(chatResponse)}</Text> : null}
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -187,6 +245,18 @@ const SembrioDetallesScreen = ({ route }) => {
 const styles = StyleSheet.create({
   safeContainer: { flex: 1, backgroundColor: '#FDFDFD' },
   container: { flex: 1, backgroundColor: '#FDFDFD', padding: 20 },
+
+  chatButton: { backgroundColor: '#2E7D32', padding: 15, borderRadius: 10, alignItems: 'center', marginTop: 20 },
+  chatButtonText: { color: '#FFF', fontSize: 18, fontWeight: 'bold' },
+  modalContainer: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center' },
+  chatBox: { backgroundColor: '#FFF', padding: 20, borderRadius: 15, width: '90%', alignItems: 'center' },
+  chatTitle: { fontSize: 20, fontWeight: 'bold', color: '#2E7D32', marginBottom: 10 },
+  chatInput: { width: '100%', borderWidth: 1, borderColor: '#2E7D32', borderRadius: 10, padding: 10, marginBottom: 10 },
+  sendButton: { backgroundColor: '#2E7D32', padding: 10, borderRadius: 10, alignItems: 'center' },
+  loadingText: { fontSize: 16, color: '#2E7D32', marginVertical: 10 },
+  chatResponse: { fontSize: 16, color: '#1B5E20', textAlign: 'center', marginVertical: 10 },
+  closeButton: { backgroundColor: '#2E7D32', padding: 10, borderRadius: 10, marginTop: 10 },
+  closeButtonText: { color: '#FFF', fontSize: 16, fontWeight: 'bold' },
 
   modalBackground: { flex: 1, backgroundColor: 'rgba(0,0,0,0.8)', justifyContent: 'center', alignItems: 'center' },
   fullImage: { width: '90%', height: '70%', borderRadius: 10 },
