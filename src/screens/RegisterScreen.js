@@ -111,7 +111,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
-    padding: 20,
+    alignItems: "center",
+    paddingHorizontal: 20,
+    backgroundColor: "#fff"
+
   },
   title: {
     fontSize: 24,
