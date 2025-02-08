@@ -42,6 +42,14 @@ const RegisterScreen = () => {
 
   return (
     <View style={styles.container}>
+
+        {/* Logo y Nombre de la App */}
+      <Text style={styles.logoText}>
+        <Text style={styles.cultiv}>Cultiv-</Text>
+        <Text style={styles.ai}>AI</Text>
+      </Text>
+      <MaterialCommunityIcons name="sprout" size={50} color="#2bf532" style={styles.iconLogo} />
+
       <Text style={styles.title}>Crear una Cuenta</Text>
 
       {/* Campos de Registro */}
@@ -97,12 +105,7 @@ const RegisterScreen = () => {
         <Text style={styles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
 
-      {/* Logo y Nombre de la App */}
-      <Text style={styles.logoText}>
-        <Text style={styles.cultiv}>Cultiv-</Text>
-        <Text style={styles.ai}>AI</Text>
-      </Text>
-      <MaterialCommunityIcons name="sprout" size={50} color="#2bf532" style={styles.iconLogo} />
+      
     </View>
   );
 };
