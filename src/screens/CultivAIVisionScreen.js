@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { getLocation } from "../services/locationService";
+import api from "../services/api";
 import { getWeather, translateWeatherDescription } from "../services/weatherService";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
@@ -62,46 +63,32 @@ const CultivAIVisionScreen = () => {
 
   const pickImage = async (fromCamera) => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
-  
+    
     if (status !== 'granted') {
       alert('Se necesita permiso para acceder a la cámara.');
       return;
     }
-  
     let result;
     if (fromCamera) {
       result = await ImagePicker.launchCameraAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
+        aspect: [1, 1],
         quality: 1,
       });
     } else {
       result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
+        aspect: [1, 1],
         quality: 1,
       });
     }
-  
-    if (!result.canceled && result.assets?.length > 0) {
-      const formData = new FormData();
-      formData.append('file', {
-        uri: result.assets[0].uri,
-        type: 'image/jpeg',
-        name: 'upload.jpg',
-      });
-  
-      try {
-        await api.post(`/sembrios/${sembríoId}/imagenes/${userId}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-        });
-        fetchImages();
-      } catch (error) {
-        console.error('Error al subir imagen:', error);
-      }
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      analyzeImage(result.assets[0].uri);
     }
   };
-  
 
   const analyzeImage = async (uri) => {
     try {
