@@ -4,6 +4,8 @@ import { useNavigation } from "@react-navigation/native";
 import { getAllUsers } from "../services/userService";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
+import Logo from "../../assets/LogoCultivAI.png";
+import { Image } from "react-native";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
@@ -35,11 +37,11 @@ const LoginScreen = () => {
 
   return (
     <View style={styles.container}>
+      <Image source={Logo} style={styles.logo} />
       <Text style={styles.logoText}>
         <Text style={styles.cultiv}>Cultiv-</Text>
         <Text style={styles.ai}>AI</Text>
       </Text>
-      <MaterialCommunityIcons name="sprout" size={50} color="#2E7D32" style={styles.iconLogo} />
 
       <Text style={styles.title}>Iniciar Sesión</Text>
 
@@ -148,6 +150,12 @@ const styles = StyleSheet.create({
   link: {
     color: "#388E3C", // Verde secundario para resaltar
     fontWeight: "bold",
+  },
+  logo: {
+    width: 120,  // Ajusta el ancho según tu preferencia
+    height: 120, // Ajusta la altura según tu preferencia
+    resizeMode: "contain", // Mantiene la proporción de la imagen
+    marginBottom: 10, // Espacio debajo del logo
   },
 });
 

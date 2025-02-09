@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import api from "../services/api"; // Se usa api.js para centralizar las peticiones
+import Logo from "../../assets/LogoCultivAI.png";
+import api from "../services/api";
+import { Image } from "react-native";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -42,11 +44,11 @@ const RegisterScreen = () => {
   return (
     <View style={styles.container}>
       {/* Logo y Nombre de la App */}
+      <Image source={Logo} style={styles.logo} />
       <Text style={styles.logoText}>
         <Text style={styles.cultiv}>Cultiv-</Text>
         <Text style={styles.ai}>AI</Text>
       </Text>
-      <MaterialCommunityIcons name="sprout" size={50} color="#2E7D32" style={styles.iconLogo} />
 
       {/* Título */}
       <Text style={styles.title}>Crear Cuenta</Text>
@@ -166,6 +168,12 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 20,
     fontWeight: "bold",
+  },
+  logo: {
+    width: 120,  // Ajusta el ancho según tu preferencia
+    height: 120, // Ajusta la altura según tu preferencia
+    resizeMode: "contain", // Mantiene la proporción de la imagen
+    marginBottom: 10, // Espacio debajo del logo
   },
 });
 
