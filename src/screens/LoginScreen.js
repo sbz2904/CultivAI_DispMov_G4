@@ -5,6 +5,9 @@ import { getAllUsers } from "../services/userService";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons"; // Iconos de Expo Icons
 import axios from "axios";
 
+import Logo from "../../assets/CULTIVAI.png";
+import { Image } from "react-native";
+
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
@@ -70,11 +73,12 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       {/* Título y Logo */}
+      <Image source={Logo} style={styles.logo} />
       <Text style={styles.logoText}>
         <Text style={styles.cultiv}>Cultiv-</Text>
         <Text style={styles.ai}>AI</Text>
       </Text>
-      <MaterialCommunityIcons name="sprout" size={50} color="#2bf532" style={styles.iconLogo} />
+      
 
       {/* Título de la pantalla */}
       <Text style={styles.title}>Iniciar Sesión</Text>
@@ -189,6 +193,12 @@ const styles = StyleSheet.create({
   link: {
     color: "#11EC35",
     fontWeight: "bold",
+  },
+  logo: {
+    width: 120,  
+    height: 120, 
+    resizeMode: "contain", 
+    marginBottom: 10, 
   },
 });
 

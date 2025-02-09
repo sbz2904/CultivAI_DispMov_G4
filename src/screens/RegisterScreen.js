@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { createUser } from "../services/userService";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import  axios  from "axios";
+import Logo from "../../assets/CULTIVAI.png";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -56,11 +57,12 @@ const RegisterScreen = () => {
   return (
     <View style={styles.container}>
       {/* Logo y Nombre de la App */}
+      <Image source={Logo} style={styles.logo} />
       <Text style={styles.logoText}>
         <Text style={styles.cultiv}>Cultiv-</Text>
         <Text style={styles.ai}>AI</Text>
       </Text>
-      <MaterialCommunityIcons name="sprout" size={50} color="#2bf532" style={styles.iconLogo} />
+      
 
       {/* Título */}
       <Text style={styles.title}>Crear Cuenta</Text>
@@ -178,6 +180,12 @@ const styles = StyleSheet.create({
     color: "#000",
     fontSize: 20,
     fontWeight: "bold",
+  },
+  logo: {
+    width: 120,  // Ajusta el ancho según tu preferencia
+    height: 120, // Ajusta la altura según tu preferencia
+    resizeMode: "contain", // Mantiene la proporción de la imagen
+    marginBottom: 10, // Espacio debajo del logo
   },
 });
 
