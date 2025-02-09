@@ -6,14 +6,15 @@ import { getWeather} from "../services/weatherService";
 import api from "../services/api";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import SettingsButton from "../components/SettingsButton";
+import { useUser } from "../context/UserContext";
 
 const GEMINI_API_KEY = "AIzaSyCkXZNDIA_AF9Ruk3aM2SCz4qMIgT5-3mQ";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-const HomeScreen = ({ route }) => {
+const HomeScreen = () => {
   const navigation = useNavigation();
-  const { userId } = route.params;
+  const { userId } = useUser();
   const [location, setLocation] = useState(null);
   const [weather, setWeather] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);

@@ -10,8 +10,8 @@ import ChatScreen from "./src/screens/ChatScreen";
 import SelectSembríosScreen from "./src/screens/SelectSembriosScreen";
 import SembrioDetallesScreen from "./src/screens/SembrioDetallesScreen";
 import CultivAIVisionScreen from "./src/screens/CultivAIVisionScreen";
-import { Ionicons } from "@expo/vector-icons"; // Importamos los íconos para las tabs
-
+import { Ionicons } from "@expo/vector-icons";
+import { UserProvider } from "./src/context/UserContext"; // Importamos el UserProvider
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,7 +28,7 @@ function MainTabs() {
             iconName = "chatbubbles";
           } else if (route.name === "CultiveAI") {
             iconName = "camera";
-          }    
+          }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: "#388E3C",
@@ -44,15 +44,17 @@ function MainTabs() {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
-        <Stack.Screen name="Main" component={MainTabs} />
-        <Stack.Screen name="SelectSembríos" component={SelectSembríosScreen} options={{ title: "Seleccionar Sembríos" }} />
-        <Stack.Screen name="SembríoDetalles" component={SembrioDetallesScreen} options={{ title: "Detalles del Sembrío" }} />
-        <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <UserProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Main" component={MainTabs} />
+          <Stack.Screen name="SelectSembríos" component={SelectSembríosScreen} options={{ title: "Seleccionar Sembríos" }} />
+          <Stack.Screen name="SembríoDetalles" component={SembrioDetallesScreen} options={{ title: "Detalles del Sembrío" }} />
+          <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </UserProvider>
   );
 }

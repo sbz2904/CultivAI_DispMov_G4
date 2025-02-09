@@ -150,16 +150,17 @@ const SelectSembríosScreen = ({ route }) => {
 
     </>
   ) : (
-    <Picker
-      selectedValue={selectedCategory}
-      onValueChange={(itemValue) => handleCategoryChange(itemValue)}
-      style={styles.picker}
-      mode="dropdown"
-    >
-      {categories.map((category, index) => (
-        <Picker.Item key={index} label={category} value={category} />
-      ))}
-    </Picker>
+              <Picker
+                selectedValue={selectedCategory}
+                onValueChange={(itemValue) => handleCategoryChange(itemValue)}
+                style={[styles.picker, { height: 50, backgroundColor: "#E8F5E9", marginVertical: 10 }]} // Ajustes
+                mode="dropdown"
+              >
+                {categories.map((category, index) => (
+                  <Picker.Item key={index} label={category} value={category} />
+                ))}
+              </Picker>
+
   )}
 </View>
 

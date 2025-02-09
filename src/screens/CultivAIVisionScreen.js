@@ -16,6 +16,7 @@ import { getLocation } from "../services/locationService";
 import api from "../services/api";
 import { getWeather, translateWeatherDescription } from "../services/weatherService";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { useUser } from "../context/UserContext";
 
 const GOOGLE_VISION_API_KEY = "AIzaSyA7-guwoTeZ8bkh-Ooxb_KyVwEBh1I9_kA";
 const GOOGLE_VISION_URL = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
@@ -40,7 +41,8 @@ const labelTranslations = {
 
 const translateLabel = (label) => labelTranslations[label.toLowerCase()] || label;
 
-const CultivAIVisionScreen = () => {
+const CultivAIVisionScreen = (route) => {
+  const { userId } = useUser();
   const [image, setImage] = useState(null);
   const [prediction, setPrediction] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -50,6 +52,8 @@ const CultivAIVisionScreen = () => {
   useEffect(() => {
     fetchWeather();
   }, []);
+
+  console.log("userId", userId);
 
   const fetchWeather = async () => {
     try {
@@ -169,6 +173,59 @@ const CultivAIVisionScreen = () => {
     }
 };
 
+const addSembrio = async () => {
+  if (!prediction) return;
+
+  const sembrioNombre = prediction.description;
+
+  try {
+    // Buscar si el sembrío existe en la lista de disponibles
+    const response = await api.get("/sembrios");
+    const sembrio = response.data.find((s) => s.nombre.toLowerCase() === sembrioNombre.toLowerCase());
+
+    if (!sembrio) {
+      Alert.alert("Error", "El sembrío no está disponible en la base de datos.");
+      return;
+    }
+
+    // Verificar si el usuario ya tiene el sembrío
+    const userResponse = await api.get(`/users/${userId}`);
+    const userSembríos = userResponse.data.sembrios || [];
+
+    if (userSembríos.includes(sembrio._id)) {
+      Alert.alert("Información", "¡Ya tienes este sembrío!");
+      return;
+    }
+
+    // Confirmación para agregar el sembrío
+    Alert.alert(
+      "Añadir sembrío",
+      `¿Quieres añadir ${sembrioNombre} a tus sembríos?`,
+      [
+        {
+          text: "Cancelar",
+          style: "cancel",
+        },
+        {
+          text: "Sí, añadir",
+          onPress: async () => {
+            try {
+              await api.put(`/sembrios/users/${userId}/sembrios`, {
+                sembrios: [...userSembríos, sembrio._id],
+              });
+              Alert.alert("Éxito", "Sembrío añadido correctamente.");
+            } catch (error) {
+              Alert.alert("Error", "No se pudo añadir el sembrío.");
+            }
+          },
+        },
+      ]
+    );
+  } catch (error) {
+    console.error("Error al añadir sembrío:", error);
+  }
+};
+
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
@@ -212,6 +269,13 @@ const CultivAIVisionScreen = () => {
             <Text style={styles.recommendationTitle}>Recomendación:</Text>
             <Text style={styles.recommendationText}>{recommendation}</Text>
           </View>
+        )}
+
+        {/* Botón para añadir el sembrío */}
+        {prediction && (
+          <TouchableOpacity style={styles.iconButton} onPress={addSembrio}>
+            <MaterialCommunityIcons name="plus" size={30} color="#FFF" />
+          </TouchableOpacity>
         )}
       </View>
     </ScrollView>

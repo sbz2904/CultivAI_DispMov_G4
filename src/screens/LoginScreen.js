@@ -2,11 +2,13 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { getAllUsers } from "../services/userService";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons"; // Iconos de Expo Icons
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import { useUser } from "../context/UserContext";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
+  const { setUserId } = useUser();
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
@@ -21,7 +23,8 @@ const LoginScreen = () => {
 
       if (user) {
         Alert.alert("Éxito", "Inicio de sesión exitoso");
-        navigation.navigate("Main", { screen: "Home", params: { userId: user._id } });
+        setUserId(user._id);
+        navigation.replace("Main"); 
       } else {
         Alert.alert("Error", "Correo o contraseña incorrectos");
       }
