@@ -5,6 +5,8 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import Logo from "../../assets/LogoCultivAI.png";
 import api from "../services/api";
 import { Image } from "react-native";
+import { GlobalStyles } from "../styles/GlobalStyles";
+import { Material } from "three";
 
 const RegisterScreen = () => {
   const navigation = useNavigation();
@@ -12,6 +14,10 @@ const RegisterScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [disabledPassword, setDisabledPassword] = useState(true);
+  const [disabledConfirmPassword, setDisabledConfirmPassword] = useState(true);
+  const regexName = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
+  const regexEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
@@ -26,7 +32,18 @@ const RegisterScreen = () => {
       Alert.alert("Error", "Las contraseñas no coinciden");
       return;
     }
-
+    if (!regexName.test(nombre)) {
+      Alert.alert("Error", "El nombre ingresado no es válido");
+      return;
+    }
+    if (!regexEmail.test(email)) {
+      Alert.alert("Error", "El correo ingresado no es válido");
+      return;
+    }
+    if(password.length < 6){
+      Alert.alert("Error", "La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
     try {
       const response = await api.post("/users/", { nombre, email, password });
 
@@ -42,22 +59,22 @@ const RegisterScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.container}>
       {/* Logo y Nombre de la App */}
       <Image source={Logo} style={styles.logo} />
-      <Text style={styles.logoText}>
-        <Text style={styles.cultiv}>Cultiv-</Text>
-        <Text style={styles.ai}>AI</Text>
+      <Text style={GlobalStyles.logoText}>
+        <Text style={GlobalStyles.cultiv}>Cultiv-</Text>
+        <Text style={GlobalStyles.ai}>AI</Text>
       </Text>
 
       {/* Título */}
-      <Text style={styles.title}>Crear Cuenta</Text>
+      <Text style={GlobalStyles.title}>Crear Cuenta</Text>
 
       {/* Campos de Registro */}
-      <View style={styles.inputContainer}>
-        <Ionicons name="person-outline" size={24} color="#388E3C" style={styles.icon} />
+      <View style={GlobalStyles.inputContainer}>
+        <Ionicons name="person-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
         <TextInput
-          style={styles.input}
+          style={GlobalStyles.input}
           placeholder="Nombre"
           value={nombre}
           onChangeText={setNombre}
@@ -65,10 +82,10 @@ const RegisterScreen = () => {
         />
       </View>
 
-      <View style={styles.inputContainer}>
-        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={styles.icon} />
+      <View style={GlobalStyles.inputContainer}>
+        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
         <TextInput
-          style={styles.input}
+          style={GlobalStyles.input}
           placeholder="Correo Electrónico"
           value={email}
           onChangeText={setEmail}
@@ -77,33 +94,36 @@ const RegisterScreen = () => {
         />
       </View>
 
-      <View style={styles.inputContainer}>
-        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={styles.icon} />
+      <View style={GlobalStyles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
         <TextInput
-          style={styles.input}
+          style={GlobalStyles.input}
           placeholder="Contraseña"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          secureTextEntry={disabledPassword}
           placeholderTextColor="#1B5E20"
         />
+        <Ionicons name={disabledPassword ? "eye" : "eye-off"} size={24} color="#388E3C" style={GlobalStyles.icon} onPress={() => setDisabledPassword(!disabledPassword)} />
       </View>
 
-      <View style={styles.inputContainer}>
-        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={styles.icon} />
+      <View style={GlobalStyles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
         <TextInput
-          style={styles.input}
+          style={GlobalStyles.input}
           placeholder="Repetir Contraseña"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
-          secureTextEntry
+          secureTextEntry={disabledConfirmPassword}
           placeholderTextColor="#1B5E20"
         />
+        <Ionicons name={disabledConfirmPassword ? "eye" : "eye-off"} size={24} color="#388E3C" style={GlobalStyles.icon} onPress={() => setDisabledConfirmPassword(!disabledConfirmPassword)} />
       </View>
 
       {/* Botón de Registro */}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Registrarse</Text>
+      <TouchableOpacity style={GlobalStyles.button} onPress={handleRegister}>
+        <MaterialCommunityIcons name="book-edit" size={24} color="#FFF" style={GlobalStyles.icon} onPress={() => setDisabledConfirmPassword(!disabledConfirmPassword)} />
+        <Text style={GlobalStyles.buttonText}>Registrarse</Text>
       </TouchableOpacity>
     </View>
   );
