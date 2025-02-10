@@ -6,12 +6,14 @@ import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
 import Logo from "../../assets/LogoCultivAI.png";
 import { Image } from "react-native";
+import { GlobalStyles } from "../styles/GlobalStyles";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const { setUserId } = useUser();
   const [password, setPassword] = useState("");
+  const [disabledPassword, setDisabledPassword] = useState(true);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -36,19 +38,19 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={GlobalStyles.container}>
       <Image source={Logo} style={styles.logo} />
-      <Text style={styles.logoText}>
-        <Text style={styles.cultiv}>Cultiv-</Text>
-        <Text style={styles.ai}>AI</Text>
+      <Text style={GlobalStyles.logoText}>
+        <Text style={GlobalStyles.cultiv}>Cultiv-</Text>
+        <Text style={GlobalStyles.ai}>AI</Text>
       </Text>
 
-      <Text style={styles.title}>Iniciar Sesión</Text>
+      <Text style={GlobalStyles.title}>Iniciar Sesión</Text>
 
-      <View style={styles.inputContainer}>
-        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={styles.icon} />
+      <View style={GlobalStyles.inputContainer}>
+        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
         <TextInput
-          style={styles.input}
+          style={GlobalStyles.input}
           placeholder="Correo Electrónico"
           value={email}
           onChangeText={setEmail}
@@ -57,20 +59,22 @@ const LoginScreen = () => {
         />
       </View>
 
-      <View style={styles.inputContainer}>
-        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={styles.icon} />
+      <View style={GlobalStyles.inputContainer}>
+        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
         <TextInput
-          style={styles.input}
+          style={GlobalStyles.input}
           placeholder="Contraseña"
           value={password}
           onChangeText={setPassword}
-          secureTextEntry
+          secureTextEntry={disabledPassword}
           placeholderTextColor="#1B5E20"
         />
+        <Ionicons name={disabledPassword ? "eye" : "eye-off"} size={24} color="#388E3C" style={GlobalStyles.icon} onPress={() => setDisabledPassword(!disabledPassword)} />
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Sign In</Text>
+      <TouchableOpacity style={GlobalStyles.button} onPress={handleLogin}>
+              <MaterialCommunityIcons name="login" size={24} color="#FFF" style={GlobalStyles.icon} onPress={() => setDisabledConfirmPassword(!disabledConfirmPassword)} />
+        <Text style={GlobalStyles.buttonText}>Sign In</Text>
       </TouchableOpacity>
 
       <Text style={styles.footerText}>
@@ -84,71 +88,12 @@ const LoginScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FDFDFD", // Fondo blanco puro
-    alignItems: "center",
-    justifyContent: "center",
-    paddingHorizontal: 20,
-  },
-  logoText: {
-    fontFamily: "Lobster-Regular",
-    fontSize: 44,
-    textAlign: "center",
-  },
-  cultiv: {
-    color: "#2E7D32", // Verde natural principal
-  },
-  ai: {
-    color: "#388E3C", // Verde secundario
-  },
-  iconLogo: {
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "bold",
-    color: "#2E7D32", // Verde principal
-    marginBottom: 30,
-  },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F0F0F0", // Gris claro para input
-    borderRadius: 50,
-    padding: 15,
-    width: "85%",
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#388E3C", // Verde secundario
-  },
-  icon: {
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    color: "#1B5E20", // Verde oscuro para texto
-    fontSize: 20,
-  },
-  button: {
-    backgroundColor: "#2E7D32", // Verde principal sólido
-    borderRadius: 50,
-    paddingVertical: 15,
-    width: "60%",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: "#FFF",
-    fontSize: 20,
-    fontWeight: "bold",
-  },
   footerText: {
     fontSize: 16,
     color: "#000",
   },
   link: {
-    color: "#388E3C", // Verde secundario para resaltar
+    color: "#81C784", // Verde secundario para resaltar
     fontWeight: "bold",
   },
   logo: {
