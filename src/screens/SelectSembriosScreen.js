@@ -33,7 +33,7 @@ const SelectSembríosScreen = ({ route }) => {
 
   const fetchSembríos = async () => {
     try {
-      const response = await api.get("/sembrios");
+      const response = await api.get("/sembrios/");
       setSembríos(response.data);
       setFilteredSembríos(response.data);
 

@@ -180,7 +180,7 @@ const addSembrio = async () => {
 
   try {
     // Buscar si el sembrío existe en la lista de disponibles
-    const response = await api.get("/sembrios");
+    const response = await api.get("/sembrios/");
     const sembrio = response.data.find((s) => s.nombre.toLowerCase() === sembrioNombre.toLowerCase());
 
     if (!sembrio) {

@@ -23,12 +23,30 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [],
-      "useCleartextTraffic": true
+      "useCleartextTraffic": true,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": {
+            "scheme": "https",
+            "host": "procode-systems.com"
+          },
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
+        }
+      ],
+      "package": "com.sbz2904.CultivAI"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-    ]
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "9fce5282-3bb3-4967-9aab-0a1a70673d8b"
+      }
+    }
   }
 }

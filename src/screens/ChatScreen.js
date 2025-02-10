@@ -28,7 +28,7 @@ const ChatScreen = () => {
       const { latitude, longitude } = await getLocation();
       const weatherData = await getWeather(latitude, longitude);
 
-      const response = await api.post("/chatbot", {
+      const response = await api.post("/chatbot/", {
         message: userInput,
         weather_data: weatherData,
       });

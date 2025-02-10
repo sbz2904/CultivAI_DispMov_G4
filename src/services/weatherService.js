@@ -2,7 +2,7 @@ import api from "./api";
 
 export const getWeather = async (latitude, longitude) => {
   try {
-    const response = await api.get(`/weather?latitude=${latitude}&longitude=${longitude}`);
+    const response = await api.get(`/weather/?latitude=${latitude}&longitude=${longitude}`);
     return response.data;
   } catch (error) {
     throw new Error("Error al obtener el clima");

@@ -28,7 +28,7 @@ const RegisterScreen = () => {
     }
 
     try {
-      const response = await api.post("/users", { nombre, email, password });
+      const response = await api.post("/users/", { nombre, email, password });
 
       if (response.data && response.data.id) {
         Alert.alert("Éxito", "Cuenta creada con éxito");
