@@ -4,6 +4,9 @@ import { useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 
+
+
+
 const RegisterScreen = () => {
   const navigation = useNavigation();
   const [nombre, setNombre] = useState("");
