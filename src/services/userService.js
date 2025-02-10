@@ -36,3 +36,12 @@ export const updateUser = async (userId, updatedData) => {
     throw new Error(error.response?.data?.error || "No se pudo actualizar el usuario");
   }
 };
+
+export const loginUser = async (email, password) => {
+  try {
+    const response = await api.post("/users/login", { email, password });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.error || "Error al iniciar sesión");
+  }
+};

@@ -51,7 +51,7 @@ const SembrioDetallesScreen = ({ route }) => {
 
   const fetchImages = async () => {
     try {
-      const response = await api.get(`/sembrios/${sembríoId}/imagenes/${userId}/`);
+      const response = await api.get(`/sembrios/${sembríoId}/imagenes/${userId}`);
       setImages(response.data.map(img => ({ uri: img.url, file_id: img.file_id })));
     } catch (error) {
       console.error('Error al cargar imágenes:', error);

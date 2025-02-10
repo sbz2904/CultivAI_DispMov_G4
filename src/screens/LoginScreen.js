@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { getAllUsers } from "../services/userService";
+import api from "../services/api";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
 import Logo from "../../assets/LogoCultivAI.png";
@@ -22,18 +23,17 @@ const LoginScreen = () => {
     }
 
     try {
-      const users = await getAllUsers();
-      const user = users.find((u) => u.email === email && u.password === password);
+      const response = await api.post("/users/login", { email, password });
 
-      if (user) {
+      if (response.data && response.data.user_id) {
         Alert.alert("Éxito", "Inicio de sesión exitoso");
-        setUserId(user._id);
+        setUserId(response.data.user_id);
         navigation.replace("Main"); 
       } else {
         Alert.alert("Error", "Correo o contraseña incorrectos");
       }
     } catch (error) {
-      Alert.alert("Error", "No se pudo conectar con el servidor");
+      Alert.alert("Error", error.response?.data?.error || "No se pudo conectar con el servidor");
     }
   };
 
@@ -74,7 +74,7 @@ const LoginScreen = () => {
 
       <TouchableOpacity style={GlobalStyles.button} onPress={handleLogin}>
               <MaterialCommunityIcons name="login" size={24} color="#FFF" style={GlobalStyles.icon} onPress={() => setDisabledConfirmPassword(!disabledConfirmPassword)} />
-        <Text style={GlobalStyles.buttonText}>Sign In</Text>
+        <Text style={GlobalStyles.buttonText}>Iniciar Sesión</Text>
       </TouchableOpacity>
 
       <Text style={styles.footerText}>

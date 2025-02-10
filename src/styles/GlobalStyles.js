@@ -40,10 +40,11 @@ export const GlobalStyles = StyleSheet.create({
     textAlign: "center",
   },
   cultiv: {
-    color: "#2E7D32", // Verde natural principal
+    fontFamily: "GlacialIndifference-Regular",
+    color: "#28A745", // Verde natural principal
   },
   ai: {
-    color: "#388E3C", // Verde secundario
+    color: "#F7805A", // Verde secundario
   },
   iconLogo: {
     marginBottom: 20,
@@ -51,7 +52,7 @@ export const GlobalStyles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#2E7D32", // Verde principal
+    color: "#145A32", // Verde principal
     marginBottom: 30,
   },
   inputContainer: {
@@ -71,12 +72,12 @@ export const GlobalStyles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: "#1B5E20", // Verde oscuro para texto
+    color: "#4D774E", // Verde oscuro para texto
     fontSize: 15,
   },
   button: {
     flexDirection: "row",
-    backgroundColor: "#FF7043", // Verde principal sólido
+    backgroundColor: "#F4D03F", // Verde principal sólido
     borderRadius: 50,
     paddingVertical: 15,
     width: "60%",
