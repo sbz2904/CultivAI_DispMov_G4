@@ -32,6 +32,8 @@ npm start
 
 JavaScript
 
+Python
+
 React Native
 
 Node.js
