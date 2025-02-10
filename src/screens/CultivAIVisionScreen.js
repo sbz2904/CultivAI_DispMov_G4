@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as FileSystem from "expo-file-system";
+import {useNavigation } from "@react-navigation/native";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { getLocation } from "../services/locationService";
 import api from "../services/api";
@@ -48,12 +49,13 @@ const CultivAIVisionScreen = (route) => {
   const [loading, setLoading] = useState(false);
   const [weather, setWeather] = useState(null);
   const [recommendation, setRecommendation] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchWeather();
-  }, []);
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
-  console.log("userId", userId);
 
   const fetchWeather = async () => {
     try {
@@ -231,11 +233,6 @@ const addSembrio = async () => {
       <View style={styles.container}>
         <Text style={styles.title}>CultivAI Vision</Text>
 
-        {weather && (
-          <Text style={styles.weatherText}>
-            Clima actual: {translateWeatherDescription(weather.weather[0].description)}, {weather.main.temp}°C
-          </Text>
-        )}
 
         {/* Botones de selección de imagen y cámara */}
         <View style={styles.buttonContainer}>

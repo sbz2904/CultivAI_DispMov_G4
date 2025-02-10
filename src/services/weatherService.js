@@ -21,6 +21,7 @@ export const translateWeatherDescription = (description) => {
     "snow": "Nieve",
     "mist": "Neblina",
     "light rain": "Lluvia ligera",
+    "moderate rain": "Lluvia moderada",
   };
 
   return translations[description] || description;

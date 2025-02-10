@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from "react-native";
+import { 
+  View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, KeyboardAvoidingView, ScrollView, TouchableWithoutFeedback, Keyboard, Platform 
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { getAllUsers } from "../services/userService";
 import api from "../services/api";
 import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useUser } from "../context/UserContext";
@@ -38,69 +39,82 @@ const LoginScreen = () => {
   };
 
   return (
-    <View style={GlobalStyles.container}>
-      <Image source={Logo} style={styles.logo} />
-      <Text style={GlobalStyles.logoText}>
-        <Text style={GlobalStyles.cultiv}>Cultiv-</Text>
-        <Text style={GlobalStyles.ai}>AI</Text>
-      </Text>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Image source={Logo} style={styles.logo} />
+          <Text style={GlobalStyles.logoText}>
+            <Text style={GlobalStyles.cultiv}>Cultiv-</Text>
+            <Text style={GlobalStyles.ai}>AI</Text>
+          </Text>
 
-      <Text style={GlobalStyles.title}>Iniciar Sesión</Text>
+          <Text style={GlobalStyles.title}>Iniciar Sesión</Text>
 
-      <View style={GlobalStyles.inputContainer}>
-        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
-        <TextInput
-          style={GlobalStyles.input}
-          placeholder="Correo Electrónico"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          placeholderTextColor="#1B5E20"
-        />
-      </View>
+          <View style={GlobalStyles.inputContainer}>
+            <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <TextInput
+              style={GlobalStyles.input}
+              placeholder="Correo Electrónico"
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              placeholderTextColor="#1B5E20"
+            />
+          </View>
 
-      <View style={GlobalStyles.inputContainer}>
-        <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
-        <TextInput
-          style={GlobalStyles.input}
-          placeholder="Contraseña"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={disabledPassword}
-          placeholderTextColor="#1B5E20"
-        />
-        <Ionicons name={disabledPassword ? "eye" : "eye-off"} size={24} color="#388E3C" style={GlobalStyles.icon} onPress={() => setDisabledPassword(!disabledPassword)} />
-      </View>
+          <View style={GlobalStyles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <TextInput
+              style={GlobalStyles.input}
+              placeholder="Contraseña"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={disabledPassword}
+              placeholderTextColor="#1B5E20"
+            />
+            <Ionicons name={disabledPassword ? "eye" : "eye-off"} size={24} color="#388E3C" style={GlobalStyles.icon} onPress={() => setDisabledPassword(!disabledPassword)} />
+          </View>
 
-      <TouchableOpacity style={GlobalStyles.button} onPress={handleLogin}>
-              <MaterialCommunityIcons name="login" size={24} color="#FFF" style={GlobalStyles.icon} onPress={() => setDisabledConfirmPassword(!disabledConfirmPassword)} />
-        <Text style={GlobalStyles.buttonText}>Iniciar Sesión</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={GlobalStyles.button} onPress={handleLogin}>
+            <MaterialCommunityIcons name="login" size={24} color="#FFF" style={GlobalStyles.icon} />
+            <Text style={GlobalStyles.buttonText}>Iniciar Sesión</Text>
+          </TouchableOpacity>
 
-      <Text style={styles.footerText}>
-        No tienes una cuenta?{" "}
-        <Text style={styles.link} onPress={() => navigation.navigate("Register")}>
-          Haz click aquí
-        </Text>
-      </Text>
-    </View>
+          <Text style={styles.footerText}>
+            No tienes una cuenta?{" "}
+            <Text style={styles.link} onPress={() => navigation.navigate("Register")}>
+              Haz click aquí
+            </Text>
+          </Text>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+  },
   footerText: {
     fontSize: 16,
     color: "#000",
   },
   link: {
-    color: "#81C784", // Verde secundario para resaltar
+    color: "#81C784",
     fontWeight: "bold",
   },
   logo: {
-    width: 120,  // Ajusta el ancho según tu preferencia
-    height: 120, // Ajusta la altura según tu preferencia
-    resizeMode: "contain", // Mantiene la proporción de la imagen
-    marginBottom: 10, // Espacio debajo del logo
+    width: 120,
+    height: 120,
+    resizeMode: "contain",
+    marginBottom: 10,
   },
 });
 

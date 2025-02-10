@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { 
+  StyleSheet, View, TextInput, Text, ScrollView, TouchableOpacity, ActivityIndicator, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Platform 
+} from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import api from "../services/api";
 import { getWeather } from "../services/weatherService";
@@ -14,15 +16,15 @@ const ChatScreen = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    navigation.setOptions({ headerShown: false }); // Oculta la pestaña de navegación
+    navigation.setOptions({ headerShown: false });
   }, [navigation]);
-  
+
   const sendMessage = async () => {
     if (!userInput.trim()) return;
 
     setChatLog([...chatLog, { user: userInput, bot: "typing..." }]);
     setIsBotTyping(true);
-    setUserInput(""); 
+    setUserInput("");
 
     try {
       const { latitude, longitude } = await getLocation();
@@ -50,51 +52,55 @@ const ChatScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <MaterialCommunityIcons name="sprout" size={30} color="#2E7D32" />
-        <Text style={styles.headerText}>Chat con Culti</Text>
-      </View>
-
-      <ScrollView style={styles.chatContainer}>
-        {chatLog.map((log, index) => (
-          <View key={index} style={styles.messageWrapper}>
-            <View style={[styles.userMessage, { marginBottom: 10 }]}>
-              <Text style={styles.userText}>{log.user}</Text>
-            </View>
-            <View style={[styles.botMessage, { marginTop: 10 }]}>
-              {log.bot === "typing..." ? (
-                <View style={styles.typingContainer}>
-                  <ActivityIndicator size="small" color="#388E3C" />
-                  <Text style={styles.typingText}>Culti está escribiendo...</Text>
-                </View>
-              ) : (
-                <Text style={styles.botText}>{log.bot}</Text>
-              )}
-            </View>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.header}>
+            <MaterialCommunityIcons name="sprout" size={30} color="#2E7D32" />
+            <Text style={styles.headerText}>Chat con Culti</Text>
           </View>
-        ))}
-      </ScrollView>
 
-      {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
+          <ScrollView style={styles.chatContainer}>
+            {chatLog.map((log, index) => (
+              <View key={index} style={styles.messageWrapper}>
+                <View style={[styles.userMessage, { marginBottom: 10 }]}>
+                  <Text style={styles.userText}>{log.user}</Text>
+                </View>
+                <View style={[styles.botMessage, { marginTop: 10 }]}>
+                  {log.bot === "typing..." ? (
+                    <View style={styles.typingContainer}>
+                      <ActivityIndicator size="small" color="#388E3C" />
+                      <Text style={styles.typingText}>Culti está escribiendo...</Text>
+                    </View>
+                  ) : (
+                    <Text style={styles.botText}>{log.bot}</Text>
+                  )}
+                </View>
+              </View>
+            ))}
+          </ScrollView>
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={userInput}
-          onChangeText={setUserInput}
-          placeholder="Escribe tu mensaje..."
-          placeholderTextColor="#1B5E20"
-        />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage} disabled={isBotTyping}>
-          <Ionicons name="send" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-    </View>
+          {errorMsg && <Text style={styles.error}>{errorMsg}</Text>}
+
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={userInput}
+              onChangeText={setUserInput}
+              placeholder="Escribe tu mensaje..."
+              placeholderTextColor="#1B5E20"
+            />
+            <TouchableOpacity style={styles.sendButton} onPress={sendMessage} disabled={isBotTyping}>
+              <Ionicons name="send" size={24} color="white" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
-// **Estilos con más espacio entre los mensajes**
+// **Estilos originales con la solución aplicada**
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -122,7 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   messageWrapper: {
-    marginBottom: 20, // Más espacio entre mensajes de usuario y bot
+    marginBottom: 20,
   },
   userMessage: {
     alignSelf: "flex-end",
@@ -130,7 +136,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 20,
     maxWidth: "80%",
-    marginBottom: 5, // Espaciado inferior para que no esté pegado al siguiente mensaje
+    marginBottom: 5,
   },
   botMessage: {
     alignSelf: "flex-start",
@@ -138,7 +144,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 20,
     maxWidth: "80%",
-    marginTop: 5, // Espaciado superior para más separación del mensaje anterior
+    marginTop: 5,
   },
   userText: {
     fontSize: 16,
