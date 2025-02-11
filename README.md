@@ -47,7 +47,7 @@ Desarrollado con *Flask* para el backend y *React Native* para el frontend. Prop
 3. Ejecuta el backend:
 
    bash
-   python apy
+   python app.py
    
 
 El backend estará disponible en http://localhost:5000/api.
