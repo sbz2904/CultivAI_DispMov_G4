@@ -56,7 +56,7 @@ const ChatScreen = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <View style={styles.header}>
-            <MaterialCommunityIcons name="sprout" size={30} color="#2E7D32" />
+            <MaterialCommunityIcons name="sprout" size={30} color="#02974A" />
             <Text style={styles.headerText}>Chat con Culti</Text>
           </View>
 
@@ -88,7 +88,7 @@ const ChatScreen = () => {
               value={userInput}
               onChangeText={setUserInput}
               placeholder="Escribe tu mensaje..."
-              placeholderTextColor="#1B5E20"
+              placeholderTextColor="#02974A"
             />
             <TouchableOpacity style={styles.sendButton} onPress={sendMessage} disabled={isBotTyping}>
               <Ionicons name="send" size={24} color="white" />
@@ -100,7 +100,6 @@ const ChatScreen = () => {
   );
 };
 
-// **Estilos originales con la solución aplicada**
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
     paddingVertical: 29,
     fontSize: 24,
     fontWeight: "bold",
-    color: "#2E7D32",
+    color: "#02974A",
     marginLeft: 10,
   },
   chatContainer: {
@@ -178,16 +177,16 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginTop: 10,
     borderWidth: 1,
-    borderColor: "#388E3C",
+    borderColor: "#0EB93F",
   },
   input: {
     flex: 1,
     fontSize: 18,
-    color: "#1B5E20",
+    color: "#02974A",
   },
   sendButton: {
     marginLeft: 10,
-    backgroundColor: "#2E7D32",
+    backgroundColor: "#0EB93F",
     padding: 12,
     borderRadius: 50,
   },

@@ -12,8 +12,8 @@ import {
   Platform,
   Modal
 } from "react-native";
-import { Picker } from "@react-native-picker/picker"; // ✅ Selector de categorías
-import api from "../services/api"; // ✅ Conexión con backend
+import { Picker } from "@react-native-picker/picker";
+import api from "../services/api";
 import { Ionicons } from "@expo/vector-icons";
 
 const SelectSembríosScreen = ({ route }) => {
@@ -100,69 +100,69 @@ const SelectSembríosScreen = ({ route }) => {
 
         {/* Barra de búsqueda */}
         <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#1B5E20" style={styles.searchIcon} />
+          <Ionicons name="search" size={20} color="#02974A" style={styles.searchIcon} />
           <TextInput
             style={styles.searchBar}
             placeholder="Buscar por nombre..."
             value={searchQuery}
             onChangeText={handleSearch}
-            placeholderTextColor="#1B5E20"
+            placeholderTextColor="#02974A"
           />
         </View>
 
-          {/* Selector de categoría (Dropdown en iOS, Picker en Android) */}
-          <View style={styles.pickerWrapper}>
-  {Platform.OS === "ios" ? (
-    <>
-      <TouchableOpacity
-        style={styles.pickerButton}
-        onPress={openIosPicker} // 📌 Usa la nueva función para abrir el modal
-      >
-        <Text style={styles.pickerText}>{selectedCategory}</Text>
-      </TouchableOpacity>
-
-      <Modal visible={iosPickerVisible} transparent animationType="slide">
-  <View style={styles.modalContainer}>
-    <View style={styles.modalContent}>
-      {categories.length > 0 ? (
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={selectedCategory}
-            onValueChange={(itemValue) => handleCategoryChange(itemValue)}
-            style={styles.picker}
-            itemStyle={{ color: "#1B5E20" }} // 🔹 Asegurar color verde en iOS
-          >
-            {categories.map((category, index) => (
-              <Picker.Item key={index} label={category} value={category} />
-            ))}
-          </Picker>
-        </View>
-      ) : (
-        <Text style={styles.emptyText}>No hay categorías disponibles</Text>
-      )}
-
-      <TouchableOpacity onPress={() => setIosPickerVisible(false)}>
-        <Text style={styles.closeText}>Cerrar</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</Modal>
-
-    </>
-  ) : (
-              <Picker
-                selectedValue={selectedCategory}
-                onValueChange={(itemValue) => handleCategoryChange(itemValue)}
-                style={[styles.picker, { height: 50, backgroundColor: "#E8F5E9", marginVertical: 10 }]} // Ajustes
-                mode="dropdown"
+        {/* Selector de categoría (Dropdown en iOS, Picker en Android) */}
+        <View style={styles.pickerWrapper}>
+          {Platform.OS === "ios" ? (
+            <>
+              <TouchableOpacity
+                style={styles.pickerButton}
+                onPress={openIosPicker} // 📌 Usa la nueva función para abrir el modal
               >
-                {categories.map((category, index) => (
-                  <Picker.Item key={index} label={category} value={category} />
-                ))}
-              </Picker>
+                <Text style={styles.pickerText}>{selectedCategory}</Text>
+              </TouchableOpacity>
 
-  )}
-</View>
+              <Modal visible={iosPickerVisible} transparent animationType="slide">
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    {categories.length > 0 ? (
+                      <View style={styles.pickerContainer}>
+                        <Picker
+                          selectedValue={selectedCategory}
+                          onValueChange={(itemValue) => handleCategoryChange(itemValue)}
+                          style={styles.picker}
+                          itemStyle={{ color: "#02974A" }} // 🔹 Asegurar color verde en iOS
+                        >
+                          {categories.map((category, index) => (
+                            <Picker.Item key={index} label={category} value={category} />
+                          ))}
+                        </Picker>
+                      </View>
+                    ) : (
+                      <Text style={styles.emptyText}>No hay categorías disponibles</Text>
+                    )}
+
+                    <TouchableOpacity onPress={() => setIosPickerVisible(false)}>
+                      <Text style={styles.closeText}>Cerrar</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+
+            </>
+          ) : (
+            <Picker
+              selectedValue={selectedCategory}
+              onValueChange={(itemValue) => handleCategoryChange(itemValue)}
+              style={[styles.picker, { height: 50, backgroundColor: "#E8F5E9", marginVertical: 10 }]} // Ajustes
+              mode="dropdown"
+            >
+              {categories.map((category, index) => (
+                <Picker.Item key={index} label={category} value={category} />
+              ))}
+            </Picker>
+
+          )}
+        </View>
 
 
         {/* Lista de Sembríos */}
@@ -181,7 +181,7 @@ const SelectSembríosScreen = ({ route }) => {
                 <Text style={styles.listCategory}>{item.categoria}</Text>
               </View>
               {selectedSembríos.includes(item._id) && (
-                <Ionicons name="checkmark-circle" size={24} color="#2E7D32" />
+                <Ionicons name="checkmark-circle" size={24} color="#02974A" />
               )}
             </TouchableOpacity>
           )}
@@ -205,10 +205,10 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: "bold",
     textAlign: "center",
-    color: "#2E7D32",
+    color: "#02974A",
     marginBottom: 20,
   },
-  
+
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
   searchBar: {
     flex: 1,
     fontSize: 16,
-    color: "#1B5E20",
+    color: "#02974A",
   },
 
 
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   selectedItem: {
-    borderColor: "#2E7D32",
+    borderColor: "#02974A",
     borderWidth: 2,
   },
   listImage: {
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
   listTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#2E7D32",
+    color: "#02974A",
   },
   listCategory: {
     fontSize: 14,
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   saveButton: {
-    backgroundColor: "#2E7D32",
+    backgroundColor: "#0EB93F",
     borderRadius: 50,
     paddingVertical: 15,
     alignItems: "center",
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
   },
   pickerText: {
     fontSize: 16,
-    color: "#1B5E20",
+    color: "#02974A",
   },
   modalContainer: {
     flex: 1,

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import { StyleSheet, View, Text, TextInput, TouchableOpacity, Image, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons"; // Iconos de Expo Icons
-import api from "../services/api"; // ✅ Usa api.js para las peticiones al backend
+import Logo from "../../assets/banner.png";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import api from "../services/api"; 
 
 const ProfileScreen = ({ route }) => {
   const navigation = useNavigation();
@@ -66,15 +67,12 @@ const ProfileScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.logoText}>
-        <Text style={styles.cultiv}>Cultiv-</Text>
-        <Text style={styles.ai}>AI</Text>
-      </Text>
+      <Image source={Logo} style={styles.logo} />
 
       {/* Imagen de Perfil */}
       <TouchableOpacity onPress={pickImage}>
         <Image
-          source={profileImage ? { uri: profileImage } : require("../../assets/icon.png")}
+          source={profileImage ? { uri: profileImage } : require("../../assets/user.png")}
           style={styles.profileImage}
         />
       </TouchableOpacity>
@@ -83,26 +81,26 @@ const ProfileScreen = ({ route }) => {
 
       {/* Campo de Nombre */}
       <View style={styles.inputContainer}>
-        <MaterialCommunityIcons name="account-outline" size={24} color="#388E3C" style={styles.icon} />
+        <MaterialCommunityIcons name="account-outline" size={24} color="#02974A" style={styles.icon} />
         <TextInput
           style={styles.input}
           value={newName}
           onChangeText={setNewName}
           editable={isEditing}
           placeholder="Nombre"
-          placeholderTextColor="#1B5E20"
+          placeholderTextColor="#02974A"
         />
       </View>
 
       {/* Campo de Correo */}
       <View style={styles.inputContainer}>
-        <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={styles.icon} />
+        <MaterialCommunityIcons name="email-outline" size={24} color="#02974A" style={styles.icon} />
         <TextInput
           style={styles.input}
           value={userData.email}
           editable={false}
           placeholder="Correo Electrónico"
-          placeholderTextColor="#1B5E20"
+          placeholderTextColor="#02974A"
         />
       </View>
 
@@ -128,34 +126,23 @@ const ProfileScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDFDFD", // Fondo blanco puro
+    backgroundColor: "#FDFDFD",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
-  },
-  logoText: {
-    fontFamily: "Lobster-Regular",
-    fontSize: 44,
-    textAlign: "center",
-  },
-  cultiv: {
-    color: "#2E7D32", // Verde natural principal
-  },
-  ai: {
-    color: "#388E3C", // Verde secundario
   },
   profileImage: {
     width: 120,
     height: 120,
     borderRadius: 60,
     borderWidth: 2,
-    borderColor: "#388E3C",
+    borderColor: "#02974A",
     marginBottom: 20,
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#2E7D32",
+    color: "#02974A",
     marginBottom: 20,
   },
   inputContainer: {
@@ -167,18 +154,18 @@ const styles = StyleSheet.create({
     width: "85%",
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: "#388E3C",
+    borderColor: "#02974A",
   },
   icon: {
     marginRight: 10,
   },
   input: {
     flex: 1,
-    color: "#1B5E20",
+    color: "#02974A",
     fontSize: 18,
   },
   button: {
-    backgroundColor: "#2E7D32",
+    backgroundColor: "#0EB93F",
     borderRadius: 50,
     paddingVertical: 15,
     width: "60%",
@@ -202,6 +189,12 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontSize: 20,
     fontWeight: "bold",
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    resizeMode: "contain",
+    marginBottom: -50,
   },
 });
 

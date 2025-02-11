@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -11,7 +11,8 @@ import SelectSembríosScreen from "./src/screens/SelectSembriosScreen";
 import SembrioDetallesScreen from "./src/screens/SembrioDetallesScreen";
 import CultivAIVisionScreen from "./src/screens/CultivAIVisionScreen";
 import { Ionicons } from "@expo/vector-icons";
-import { UserProvider } from "./src/context/UserContext"; // Importamos el UserProvider
+import { UserProvider } from "./src/context/UserContext";
+import SplashScreen from "./src/screens/SplashScreen"; // Importamos el SplashScreen
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -31,7 +32,7 @@ function MainTabs() {
           }
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#388E3C",
+        tabBarActiveTintColor: "#0EB93F",
         tabBarInactiveTintColor: "gray",
       })}
     >
@@ -43,17 +44,29 @@ function MainTabs() {
 }
 
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false); // Después de 3 segundos, cambia al Login
+    }, 3000);
+  }, []);
+
   return (
     <UserProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
-          <Stack.Screen name="Main" component={MainTabs} />
-          <Stack.Screen name="SelectSembríos" component={SelectSembríosScreen} options={{ title: "Seleccionar Sembríos" }} />
-          <Stack.Screen name="SembríoDetalles" component={SembrioDetallesScreen} options={{ title: "Detalles del Sembrío" }} />
-          <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
-        </Stack.Navigator>
+        {isLoading ? (
+          <SplashScreen />
+        ) : (
+          <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Login" component={LoginScreen} />
+            <Stack.Screen name="Register" component={RegisterScreen} />
+            <Stack.Screen name="Main" component={MainTabs} />
+            <Stack.Screen name="SelectSembríos" component={SelectSembríosScreen} options={{ title: "Seleccionar Sembríos" }} />
+            <Stack.Screen name="SembríoDetalles" component={SembrioDetallesScreen} options={{ title: "Detalles del Sembrío" }} />
+            <Stack.Screen name="Profile" component={ProfileScreen} options={{ title: "Perfil" }} />
+          </Stack.Navigator>
+        )}
       </NavigationContainer>
     </UserProvider>
   );

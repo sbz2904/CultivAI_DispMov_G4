@@ -297,15 +297,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#2E7D32", // Verde principal
+    color: "#02974A",
     marginBottom: 20,
   },
-  weatherText: {
-    fontSize: 18,
-    color: "#1B5E20", // Verde oscuro
-    marginBottom: 10,
-  },
-
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "center",
@@ -313,7 +307,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   iconButton: {
-    backgroundColor: "#388E3C",
+    backgroundColor: "#0EB93F",
     borderRadius: 50,
     width: 60,
     height: 60,
@@ -323,7 +317,7 @@ const styles = StyleSheet.create({
   },
   buttonLabel: {
     textAlign: "center",
-    color: "#1B5E20",
+    color: "#02974A",
     fontSize: 14,
     marginTop: 5,
   },
@@ -346,7 +340,7 @@ const styles = StyleSheet.create({
   predictionText: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#2E7D32",
+    color: "#02974A",
   },
 
   recommendationContainer: {
@@ -359,11 +353,11 @@ const styles = StyleSheet.create({
   recommendationTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#2E7D32",
+    color: "#02974A",
   },
   recommendationText: {
     fontSize: 16,
-    color: "#1B5E20",
+    color: "#02974A",
   },
 });
 

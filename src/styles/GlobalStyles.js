@@ -1,17 +1,14 @@
 import { StyleSheet } from "react-native";
 
-/* fonts */
 export const FontFamily = {
   interBold: "Inter-Bold",
   rubikBold: "Rubik-Bold",
   interRegular: "Inter-Regular",
 };
-/* font sizes */
 export const FontSize = {
   size_lg: 18,
   size_sm: 14,
 };
-/* Colors */
 export const Color = {
   colorWhite: "#fff",
   colorGray_100: "#171a1f",
@@ -21,7 +18,6 @@ export const Color = {
   colorSilver: "#bcc1ca",
   colorDarkslategray: "#424955",
 };
-/* border radiuses */
 export const Border = {
   br_7xs: 6,
 };
@@ -29,7 +25,7 @@ export const Border = {
 export const GlobalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FDFDFD", // Fondo blanco puro
+    backgroundColor: "#FDFDFD",
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
@@ -39,20 +35,13 @@ export const GlobalStyles = StyleSheet.create({
     fontSize: 44,
     textAlign: "center",
   },
-  cultiv: {
-    fontFamily: "GlacialIndifference-Regular",
-    color: "#28A745", // Verde natural principal
-  },
-  ai: {
-    color: "#F7805A", // Verde secundario
-  },
   iconLogo: {
     marginBottom: 20,
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
-    color: "#145A32", // Verde principal
+    color: "#02974A", // Verde principal
     marginBottom: 30,
   },
   inputContainer: {
@@ -64,7 +53,7 @@ export const GlobalStyles = StyleSheet.create({
     width: "85%",
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: "#388E3C", // Verde secundario
+    borderColor: "#02974A", // Verde secundario
   },
   icon: {
     marginRight: 10,
@@ -72,12 +61,12 @@ export const GlobalStyles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    color: "#4D774E", // Verde oscuro para texto
+    color: "#02974A", // Verde oscuro para texto
     fontSize: 15,
   },
   button: {
     flexDirection: "row",
-    backgroundColor: "#F4D03F", // Verde principal sólido
+    backgroundColor: "#0EB93F", // Verde principal sólido
     borderRadius: 50,
     paddingVertical: 15,
     width: "60%",

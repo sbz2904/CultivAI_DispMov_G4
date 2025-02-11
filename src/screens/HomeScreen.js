@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
+import { StyleSheet, View, Text, TouchableOpacity, ScrollView, ImageBackground } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getLocation } from "../services/locationService";
 import { getWeather} from "../services/weatherService";
@@ -22,7 +22,6 @@ const HomeScreen = () => {
   const [recommendation, setRecommendation] = useState("Cargando recomendación...");
   const [userSembríos, setUserSembríos] = useState([]);
 
-  // Ocultar la barra de navegación
   useEffect(() => {
     navigation.setOptions({ headerShown: false });
     fetchLocationAndWeather();
@@ -153,13 +152,14 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   content: {
+    backgroundColor: "#fff",
     padding: 20,
     marginTop: 70,
   },
   headerText: {
     fontSize: 30,
     fontFamily: "Montserrat-SemiBold",
-    color: "#2E7D32",
+    color: "#02974A",
     marginBottom: 20,
   },
   weatherContainer: {
@@ -179,19 +179,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     alignSelf: "center",
     fontWeight: "bold",
-    color: "#2E7D32",
+    color: "#02974A",
     marginBottom: 10,
   },
   recommendationText: {
     fontSize: 16,
-    color: "#1B5E20",
+    color: "#02974A",
     textAlign: "center",
   },
   sectionTitle: {
     paddingVertical: 10,
     fontSize: 24,
     fontFamily: "Inter-SemiBold",
-    color: "#2E7D32",
+    color: "#02974A",
     marginBottom: 15,
     textAlign: "center",
   },
@@ -201,8 +201,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cultivoBox: {
-    width: "48%", // 📏 Hace que haya dos por fila
-    aspectRatio: 1, // 📐 Hace que sean cuadrados
+    width: "48%",
+    aspectRatio: 1,
     backgroundColor: "rgba(0, 0, 0, 0.1)",
     borderRadius: 15,
     padding: 15,
@@ -219,13 +219,13 @@ const styles = StyleSheet.create({
     marginTop: -30,
     alignContent: "center",
     alignItems: "center",
-    flex: 0.8, // 🔥 Para que ocupe todo el cultivoBox
+    flex: 0.8,
     justifyContent: "center",
     alignItems: "center",
   },
   cultivoImage: {
     borderRadius: 15,
-    opacity: 0.5, // 🔥 Reduce un poco la opacidad para mejor contraste con el texto
+    opacity: 0.5,
   },
   cultivoIcon: {
     width: 50,
@@ -249,15 +249,15 @@ const styles = StyleSheet.create({
   cultivoButtonText: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#2E7D32",
+    color: "#02974A",
   },
   noCultivosText: {
     fontSize: 16,
-    color: "#2E7D32",
+    color: "#02974A",
     textAlign: "center",
   },
   addButton: {
-    backgroundColor: "#2E7D32",
+    backgroundColor: "#0EB93F",
     paddingVertical: 15,
     borderRadius: 15,
     alignItems: "center",

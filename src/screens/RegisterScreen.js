@@ -52,79 +52,72 @@ const RegisterScreen = () => {
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.container}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {/* Logo y Nombre de la App */}
-          <Image source={Logo} style={styles.logo} />
-          <Text style={GlobalStyles.logoText}>
-            <Text style={GlobalStyles.cultiv}>Cultiv-</Text>
-            <Text style={GlobalStyles.ai}>AI</Text>
-          </Text>
 
-          {/* Título */}
+          <Image source={Logo} style={styles.logo} />
+
           <Text style={GlobalStyles.title}>Crear Cuenta</Text>
 
-          {/* Campos de Registro */}
           <View style={GlobalStyles.inputContainer}>
-            <Ionicons name="person-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <Ionicons name="person-outline" size={24} color="#02974A" style={GlobalStyles.icon} />
             <TextInput
               style={GlobalStyles.input}
               placeholder="Nombre"
               value={nombre}
               onChangeText={setNombre}
-              placeholderTextColor="#1B5E20"
+              placeholderTextColor="#02974A"
             />
           </View>
 
           <View style={GlobalStyles.inputContainer}>
-            <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <MaterialCommunityIcons name="email-outline" size={24} color="#02974A" style={GlobalStyles.icon} />
             <TextInput
               style={GlobalStyles.input}
               placeholder="Correo Electrónico"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
-              placeholderTextColor="#1B5E20"
+              placeholderTextColor="#02974A"
             />
           </View>
 
           <View style={GlobalStyles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <Ionicons name="lock-closed-outline" size={24} color="#02974A" style={GlobalStyles.icon} />
             <TextInput
               style={GlobalStyles.input}
               placeholder="Contraseña"
               value={password}
               onChangeText={setPassword}
               secureTextEntry={disabledPassword}
-              placeholderTextColor="#1B5E20"
+              placeholderTextColor="#02974A"
             />
             <Ionicons
               name={disabledPassword ? "eye" : "eye-off"}
               size={24}
-              color="#388E3C"
+              color="#02974A"
               style={GlobalStyles.icon}
               onPress={() => setDisabledPassword(!disabledPassword)}
             />
           </View>
 
           <View style={GlobalStyles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <Ionicons name="lock-closed-outline" size={24} color="#02974A" style={GlobalStyles.icon} />
             <TextInput
               style={GlobalStyles.input}
               placeholder="Repetir Contraseña"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               secureTextEntry={disabledConfirmPassword}
-              placeholderTextColor="#1B5E20"
+              placeholderTextColor="#02974A"
             />
             <Ionicons
               name={disabledConfirmPassword ? "eye" : "eye-off"}
               size={24}
-              color="#388E3C"
+              color="#02974A"
               style={GlobalStyles.icon}
               onPress={() => setDisabledConfirmPassword(!disabledConfirmPassword)}
             />
           </View>
 
-          {/* Botón de Registro */}
           <TouchableOpacity style={GlobalStyles.button} onPress={handleRegister}>
             <MaterialCommunityIcons name="book-edit" size={24} color="#FFF" style={GlobalStyles.icon} />
             <Text style={GlobalStyles.buttonText}>Registrarse</Text>
@@ -138,7 +131,7 @@ const RegisterScreen = () => {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContainer: { flexGrow: 1, justifyContent: "center", alignItems: "center", paddingHorizontal: 20 },
-  logo: { width: 120, height: 120, resizeMode: "contain", marginBottom: 10 },
+  logo: { width: 220, height: 220, resizeMode: "contain", marginBottom: 10 },
 });
 
 export default RegisterScreen;

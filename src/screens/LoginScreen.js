@@ -43,36 +43,32 @@ const LoginScreen = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Image source={Logo} style={styles.logo} />
-          <Text style={GlobalStyles.logoText}>
-            <Text style={GlobalStyles.cultiv}>Cultiv-</Text>
-            <Text style={GlobalStyles.ai}>AI</Text>
-          </Text>
 
           <Text style={GlobalStyles.title}>Iniciar Sesión</Text>
 
           <View style={GlobalStyles.inputContainer}>
-            <MaterialCommunityIcons name="email-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <MaterialCommunityIcons name="email-outline" size={24} color="#02974A" style={GlobalStyles.icon} />
             <TextInput
               style={GlobalStyles.input}
               placeholder="Correo Electrónico"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
-              placeholderTextColor="#1B5E20"
+              placeholderTextColor="#02974A"
             />
           </View>
 
           <View style={GlobalStyles.inputContainer}>
-            <Ionicons name="lock-closed-outline" size={24} color="#388E3C" style={GlobalStyles.icon} />
+            <Ionicons name="lock-closed-outline" size={24} color="#02974A" style={GlobalStyles.icon} />
             <TextInput
               style={GlobalStyles.input}
               placeholder="Contraseña"
               value={password}
               onChangeText={setPassword}
               secureTextEntry={disabledPassword}
-              placeholderTextColor="#1B5E20"
+              placeholderTextColor="#02974A"
             />
-            <Ionicons name={disabledPassword ? "eye" : "eye-off"} size={24} color="#388E3C" style={GlobalStyles.icon} onPress={() => setDisabledPassword(!disabledPassword)} />
+            <Ionicons name={disabledPassword ? "eye" : "eye-off"} size={24} color="#02974A" style={GlobalStyles.icon} onPress={() => setDisabledPassword(!disabledPassword)} />
           </View>
 
           <TouchableOpacity style={GlobalStyles.button} onPress={handleLogin}>
@@ -107,12 +103,12 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   link: {
-    color: "#81C784",
+    color: "#0EB93F",
     fontWeight: "bold",
   },
   logo: {
-    width: 120,
-    height: 120,
+    width: 250,
+    height: 250,
     resizeMode: "contain",
     marginBottom: 10,
   },
