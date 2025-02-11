@@ -34,3 +34,7 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+# api keys
+config.js
+../screens/config.js
