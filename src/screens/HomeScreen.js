@@ -7,9 +7,9 @@ import api from "../services/api";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import SettingsButton from "../components/SettingsButton";
 import { useUser } from "../context/UserContext";
+import CONFIG from '../screens/config';
 
-const GEMINI_API_KEY = "AIzaSyCkXZNDIA_AF9Ruk3aM2SCz4qMIgT5-3mQ";
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
+const genAI = new GoogleGenerativeAI(CONFIG.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const HomeScreen = () => {
