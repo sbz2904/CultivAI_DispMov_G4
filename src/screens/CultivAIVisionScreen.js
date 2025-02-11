@@ -21,7 +21,6 @@ import { useUser } from "../context/UserContext";
 import CONFIG from "../screens/config";
 
 const GOOGLE_VISION_URL = `https://vision.googleapis.com/v1/images:annotate?key=${CONFIG.GOOGLE_VISION_API_KEY}`;
-const GEMINI_API_KEY = "";
 const genAI = new GoogleGenerativeAI(CONFIG.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
