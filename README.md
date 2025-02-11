@@ -34,7 +34,7 @@ Desarrollado con *Flask* para el backend y *React Native* para el frontend. Prop
 
 1. Instala las dependencias necesarias:
 
-   bash
+   
    pip install -r requirements.txt
    
 
@@ -46,7 +46,7 @@ Desarrollado con *Flask* para el backend y *React Native* para el frontend. Prop
 
 3. Ejecuta el backend:
 
-   bash
+   
    python app.py
    
 
@@ -58,19 +58,19 @@ El backend estará disponible en http://localhost:5000/api.
 
 1. Navega al directorio del frontend:
 
-   bash
+   
    cd frontend
    
 
 2. Instala las dependencias:
 
-   bash
+   
    npm install
    
 
 3. Inicia el servidor de desarrollo:
 
-   bash
+   
    npm start
    
 
@@ -108,7 +108,7 @@ El frontend estará disponible en http://localhost:8081.
 
 1. Clona el repositorio:
 
-   bash
+
    git clone https://github.com/sbz2904/CultivAI_DispMov_G4_Frontend.git
    cd CultivAI_DispMov_G4
    
@@ -133,13 +133,13 @@ El frontend estará disponible en http://localhost:8081.
 1. Haz un fork del repositorio.
 2. Crea una nueva rama:
 
-   bash
+   
    git checkout -b feature/nueva-funcionalidad
    
 
 3. Realiza tus cambios y haz commit:
 
-   bash
+   
    git commit -m "Agrega nueva funcionalidad"
    
 
