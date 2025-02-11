@@ -19,9 +19,9 @@ import { getWeather, translateWeatherDescription } from "../services/weatherServ
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useUser } from "../context/UserContext";
 
-const GOOGLE_VISION_API_KEY = "AIzaSyA7-guwoTeZ8bkh-Ooxb_KyVwEBh1I9_kA";
+const GOOGLE_VISION_API_KEY = "";
 const GOOGLE_VISION_URL = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
-const GEMINI_API_KEY = "AIzaSyCkXZNDIA_AF9Ruk3aM2SCz4qMIgT5-3mQ";
+const GEMINI_API_KEY = "";
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
