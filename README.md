@@ -34,20 +34,20 @@ Desarrollado con *Flask* para el backend y *React Native* para el frontend. Prop
 
 1. Instala las dependencias necesarias:
 
-   bash
+   
    pip install -r requirements.txt
    
 
 2. Configura la base de datos en config.py:
 
    python
-   MONGO_URI = "mongodb://tu_ip:27017/cultivai"
+   MONGO_URI = "mongodb://tu_ip:27017"
    
 
 3. Ejecuta el backend:
 
-   bash
-   flask run
+   
+   python app.py
    
 
 El backend estará disponible en http://localhost:5000/api.
@@ -58,23 +58,23 @@ El backend estará disponible en http://localhost:5000/api.
 
 1. Navega al directorio del frontend:
 
-   bash
+   
    cd frontend
    
 
 2. Instala las dependencias:
 
-   bash
+   
    npm install
    
 
 3. Inicia el servidor de desarrollo:
 
-   bash
+   
    npm start
    
 
-El frontend estará disponible en http://localhost:3000.
+El frontend estará disponible en http://localhost:8081.
 
 ---
 
@@ -108,7 +108,7 @@ El frontend estará disponible en http://localhost:3000.
 
 1. Clona el repositorio:
 
-   bash
+
    git clone https://github.com/sbz2904/CultivAI_DispMov_G4_Frontend.git
    cd CultivAI_DispMov_G4
    
@@ -133,13 +133,13 @@ El frontend estará disponible en http://localhost:3000.
 1. Haz un fork del repositorio.
 2. Crea una nueva rama:
 
-   bash
+   
    git checkout -b feature/nueva-funcionalidad
    
 
 3. Realiza tus cambios y haz commit:
 
-   bash
+   
    git commit -m "Agrega nueva funcionalidad"
    
 
@@ -156,3 +156,6 @@ Este proyecto está bajo la licencia MIT.
 ## 📬 Contacto
 
 ¿Tienes preguntas o sugerencias? Contáctanos en: 🌐 [GitHub Repository](https://github.com/sbz2904/CultivAI_DispMov_G4_Frontend)
+
+## Figma
+https://www.figma.com/proto/mff5cJUScCrBTeSXvUB5Ay/Untitled?node-id=27-12&t=GdL4gLWdaNNTtrPM-1
