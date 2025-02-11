@@ -25,7 +25,7 @@ const SelectSembríosScreen = ({ route }) => {
   const [selectedCategory, setSelectedCategory] = useState("Todas");
   const [categories, setCategories] = useState(["Todas"]);
   const [iosPickerVisible, setIosPickerVisible] = useState(false);
-  const openIosPicker = () => setIosPickerVisible(true); // 📌 Función para abrir el modal
+  const openIosPicker = () => setIosPickerVisible(true);
   useEffect(() => {
     fetchSembríos();
     fetchUserSembríos();
