@@ -134,7 +134,7 @@ const SembrioDetallesScreen = ({ route }) => {
   const deleteImage = async (fileId) => {
     try {
       await api.delete(`/sembrios/imagenes/${fileId}/${userId}/${sembríoId}`);
-      fetchImages(); // Recargar las imágenes después de eliminar
+      fetchImages(); 
     } catch (error) {
       console.error('Error al eliminar imagen:', error);
     }
@@ -143,7 +143,7 @@ const SembrioDetallesScreen = ({ route }) => {
   const deleteNote = async (noteId) => {
     try {
       await api.delete(`/sembrios/${sembríoId}/notas/${userId}/${noteId}`);
-      fetchNotes(); // Recargar notas después de eliminar
+      fetchNotes(); 
     } catch (error) {
       console.error('Error al eliminar nota:', error);
     }
@@ -152,7 +152,7 @@ const SembrioDetallesScreen = ({ route }) => {
     const updateNote = async (noteId, newContent) => {
     try {
       await api.put(`/sembrios/${sembríoId}/notas/${userId}/${noteId}`, { content: newContent });
-      fetchNotes(); // Recargar notas después de actualizar
+      fetchNotes();
     } catch (error) {
       console.error('Error al actualizar nota:', error);
     }

@@ -12,7 +12,7 @@ import SembrioDetallesScreen from "./src/screens/SembrioDetallesScreen";
 import CultivAIVisionScreen from "./src/screens/CultivAIVisionScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { UserProvider } from "./src/context/UserContext";
-import SplashScreen from "./src/screens/SplashScreen"; // Importamos el SplashScreen
+import SplashScreen from "./src/screens/SplashScreen";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -48,7 +48,7 @@ export default function App() {
 
   useEffect(() => {
     setTimeout(() => {
-      setIsLoading(false); // Después de 3 segundos, cambia al Login
+      setIsLoading(false);
     }, 3000);
   }, []);
 

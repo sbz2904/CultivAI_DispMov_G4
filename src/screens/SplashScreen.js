@@ -2,7 +2,7 @@ import React from "react";
 import { View, Image, StyleSheet, Dimensions } from "react-native";
 import { Svg, Defs, RadialGradient, Rect, Stop } from "react-native-svg";
 
-const { width, height } = Dimensions.get("window"); // Para ajustar el tamaño al dispositivo
+const { width, height } = Dimensions.get("window");
 
 const SplashScreen = () => {
   return (
@@ -19,7 +19,6 @@ const SplashScreen = () => {
         <Rect width="100%" height="100%" fill="url(#grad)" />
       </Svg>
 
-      {/* Logo en el centro */}
       <Image
         source={require("../../assets/LogoCultivAI.png")}
         style={styles.logo}
@@ -38,7 +37,7 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   logo: {
-    width: 180, // Ajusta el tamaño del logo según necesidad
+    width: 180,
     height: 180,
     resizeMode: "contain",
   },
