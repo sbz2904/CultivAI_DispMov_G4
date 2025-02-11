@@ -41,13 +41,13 @@ Desarrollado con *Flask* para el backend y *React Native* para el frontend. Prop
 2. Configura la base de datos en config.py:
 
    python
-   MONGO_URI = "mongodb://tu_ip:27017/cultivai"
+   MONGO_URI = "mongodb://tu_ip:27017"
    
 
 3. Ejecuta el backend:
 
    bash
-   flask run
+   python apy
    
 
 El backend estará disponible en http://localhost:5000/api.
@@ -74,7 +74,7 @@ El backend estará disponible en http://localhost:5000/api.
    npm start
    
 
-El frontend estará disponible en http://localhost:3000.
+El frontend estará disponible en http://localhost:8081.
 
 ---
 
