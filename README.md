@@ -156,3 +156,6 @@ Este proyecto está bajo la licencia MIT.
 ## 📬 Contacto
 
 ¿Tienes preguntas o sugerencias? Contáctanos en: 🌐 [GitHub Repository](https://github.com/sbz2904/CultivAI_DispMov_G4_Frontend)
+
+## Figma
+https://www.figma.com/proto/mff5cJUScCrBTeSXvUB5Ay/Untitled?node-id=27-12&t=GdL4gLWdaNNTtrPM-1
